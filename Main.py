@@ -5,7 +5,6 @@ import Player
 
 
 def main():
-    global world
     pygame.init()
 
     # Расширение игры
@@ -48,8 +47,8 @@ def main():
         pygame.display.flip()
 
         # Обновление персонажа
-
         player.move()
+        player.fall(world.world)
 
         clock.tick(fps)
 

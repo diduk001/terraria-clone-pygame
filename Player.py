@@ -25,21 +25,26 @@ class Player:
         self.x += self.vx
         self.y += self.vy
         if self.vy < 0:
-            self.vy += 10
-
+            self.vy += 5
 
     def speed_x(self, x):
         self.vx += x
 
-    def fall(self, y):
-        self.vy -= y
+    def fall(self, world):
+        bx, by = self.block_now()
+        print(bx, by)
+        by += 1
+        print(world[bx][by].name)
+        if (world[bx][by].solidity_pickaxe == -1 and self.vy == 0):
+            self.vy -= self.jump_speed
 
     def jump(self):
         if self.vy == 0:
             self.vy += self.jump_speed
 
     def block_now(self):
-        return self.x / Block.size, self.y / Block.size
+        print()
+        return self.x // Block.size, self.y // Block.size
 
     def collide(self):
         pass
@@ -50,6 +55,7 @@ class Player:
     def damage(self, x):
         self.hp -= x
 
+    def :
     def is_live(self):
         if self.hp > 0:
             return True

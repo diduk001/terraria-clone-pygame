@@ -6,8 +6,8 @@ class World:
 
     # Высота и Ширина мира (в блоках)
 
-    width = 500
-    height = 500
+    width = 100
+    height = 100
 
     def __init__(self, screen):
         self.world = list()
