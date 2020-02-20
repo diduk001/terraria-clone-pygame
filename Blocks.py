@@ -3,13 +3,13 @@ from pygame.rect import Rect
 
 
 class Block:
+    size = 16
     def __init__(self, id, x, y):
         # id блока, x координата, y координата, размер блока (в пикселях)
 
         self.id = id
         self.x = x
         self.y = y
-        self.size = 10
 
         # Имя блока, его цвет отрисовки, флаг is_breakable, прочность блока
 
