@@ -5,6 +5,7 @@ import Player
 
 
 def main():
+    global world
     pygame.init()
 
     # Расширение игры
@@ -25,8 +26,19 @@ def main():
 
     while running:
         # Обработка событий
-
+        if pygame.key.get_pressed()[32]:
+            player.jump()
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == 100:
+                    player.speed_x(player.speed)
+                if event.key == 97:
+                    player.speed_x(-player.speed)
+            if event.type == pygame.KEYUP:
+                if event.key == 100:
+                    player.speed_x(-player.speed)
+                if event.key == 97:
+                    player.speed_x(player.speed)
             if event.type == pygame.QUIT:
                 running = False
 
@@ -37,10 +49,10 @@ def main():
 
         # Обновление персонажа
 
-        player.update()
         player.move()
 
         clock.tick(fps)
 
 if __name__ == '__main__':
+    world = list()
     main()
