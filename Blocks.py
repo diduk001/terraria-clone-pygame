@@ -3,13 +3,15 @@ from pygame.rect import Rect
 
 
 class Block:
+    # размер блока (в пикселях)
+    size = 20
+
     def __init__(self, id, x, y):
-        # id блока, x координата, y координата, размер блока (в пикселях)
+        # id блока
 
         self.id = id
         self.x = x
         self.y = y
-        self.size = 10
 
         # Имя блока, его цвет отрисовки, флаг is_breakable, прочность блока
 
@@ -19,13 +21,20 @@ class Block:
         self.solidity = int()
 
     # Функция отрисоки
-
-    def show(self, screen):
+    # screen - экран для отрисовки
+    # x - x координата левого верхнего угла на экране
+    # y - y координата левого верхнего угла на экране
+    def show(self, screen, x, y):
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(self.x, self.y, self.size, self.size))
+        pygame.draw.rect(screen, self.color, Rect(x + 1, y + 1, self.size - 1, self.size - 1))
 
+    def __str__(self):
+        return f"<Block {self.name}>"
+
+    def __repr__(self):
+        return str(self)
 
 # Блок Воздуха
 
@@ -34,7 +43,7 @@ class Air(Block):
         super().__init__(0, x, y)
 
         self.name = "Air"
-        self.color = ()
+        self.color = (105, 180, 255)
         self.is_breakable = False
         self.solidity = -1
 

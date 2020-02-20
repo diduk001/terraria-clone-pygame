@@ -6,8 +6,8 @@ class World:
 
     # Высота и Ширина мира (в блоках)
 
-    width = 200
-    height = 200
+    width = 40
+    height = 20
 
     def __init__(self, screen):
         self.world = list()
@@ -31,6 +31,7 @@ class World:
     # Функция отрисовки
 
     def show(self):
-        for row in self.world:
-            for block in row:
-                block.show(self.screen)
+        for y in range(self.height):
+            for x in range(self.width):
+                block = self.world[y][x]
+                block.show(self.screen, x * block.size, y * block.size)
