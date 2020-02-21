@@ -1,72 +1,191 @@
 import pygame
-from pygame.rect import Rect
+from pygame import Rect
 
 
 class Block:
-    # размер блока (в пикселях)
     size = 20
-
     def __init__(self, id, x, y):
-        # id блока
+        # id блока и его координаты;
 
         self.id = id
         self.x = x
         self.y = y
 
-        # Имя блока, его цвет отрисовки, флаг is_breakable, прочность блока
+        # Имя блока; его цвет отрисовки; возможность к разрушению; прочность блока добыче: киркой, топором; id итема, выпадающего при разрушении;
 
         self.name = str()
         self.color = tuple()
         self.is_breakable = bool()
-        self.solidity = int()
+        self.solidity_pickaxe = int()
+        self.solidity_axe = int()
+        self.drop = int()
 
-    # Функция отрисоки
-    # screen - экран для отрисовки
-    # x - x координата левого верхнего угла на экране
-    # y - y координата левого верхнего угла на экране
-    def show(self, screen, x, y):
+    # Функция отрисоки;
+
+    def show(self, screen):
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(x + 1, y + 1, self.size - 1, self.size - 1))
+        pygame.draw.rect(screen, self.color, Rect(self.x, self.y, self.size, self.size))
 
-    def __str__(self):
-        return f"<Block {self.name}>"
+    # Функция разрушения;
 
-    def __repr__(self):
-        return str(self)
+    def destroy(self, screen):
+        pass
 
-# Блок Воздуха
+
+# Блок Воздуха;
 
 class Air(Block):
     def __init__(self, x, y):
         super().__init__(0, x, y)
 
         self.name = "Air"
-        self.color = (105, 180, 255)
+        self.color = ()
         self.is_breakable = False
-        self.solidity = -1
+
+        # -1 значит проходимость игроком и мобами
+
+        self.solidity_pickaxe = -1
+        self.solidity_axe = -1
 
 
-# Блок Грязи
+# Блок Кореной Породы (JJBA: Diamond Is Unbreakable);
+
+class JoJoStone(Block):
+    def __init__(self, x, y):
+        super().__init__(1, x, y)
+
+        self.name = "JoJoStone"
+        self.color = (106, 13, 173)
+        self.is_breakable = False
+
+        # 1000 значит, что его нельзя будет скопать ни одной киркой или топором
+
+        self.solidity_pickaxe = 1000
+        self.solidity_axe = 1000
+
+
+# Блок Грязи;
 
 class Dirt(Block):
     def __init__(self, x, y):
-        super().__init__(1, x, y)
+        super().__init__(2, x, y)
 
         self.name = "Dirt"
         self.color = (77, 38, 0)
         self.is_breakable = True
-        self.solidity = 10
+        self.solidity_pickaxe = 25
+        self.solidity_axe = 25
+        self.drop = 0
 
 
-# Блок Камня
+# Блок Камня;
 
 class Stone(Block):
     def __init__(self, x, y):
-        super().__init__(2, x, y)
+        super().__init__(3, x, y)
 
         self.name = "Stone"
         self.color = (107, 107, 71)
         self.is_breakable = True
-        self.solidity = 25
+        self.solidity_pickaxe = 35
+        self.solidity_axe = 1000
+        self.drop = 1
+
+
+# Блок Медной Руды
+
+class CopperOre(Block):
+    def __init__(self, x, y):
+        super().__init__(4, x, y)
+
+        self.name = "Copper Ore"
+        self.color = (72, 45, 20)
+        self.is_breakable = True
+        self.solidity_pickaxe = 50
+        self.solidity_axe = 1000
+        self.drop = 2
+
+
+# Блок Железной Руды
+
+class IronOre(Block):
+    def __init__(self, x, y):
+        super().__init__(5, x, y)
+
+        self.name = "Iron Ore"
+        self.color = (203, 205, 205)
+        self.is_breakable = True
+        self.solidity_pickaxe = 50
+        self.solidity_axe = 1000
+        self.drop = 3
+
+
+# Блок Дерева
+
+class Wood(Block):
+    def __init__(self, x, y):
+        super().__init__(6, x, y)
+
+        self.name = "Wood"
+        self.color = (133, 94, 66)
+        self.is_breakable = True
+        self.solidity_pickaxe = 50
+        self.solidity_axe = 20
+        self.drop = 4
+
+
+# Блок Листвы
+
+class Foliage(Block):
+    def __init__(self, x, y):
+        super().__init__(7, x, y)
+
+        self.name = "Foliage"
+        self.color = (80, 200, 120)
+        self.is_breakable = True
+        self.solidity_pickaxe = 5
+        self.solidity_axe = 5
+
+
+# Блок Древесины
+
+class TimberBlock(Block):
+    def __init__(self, x, y):
+        super().__init__(8, x, y)
+
+        self.name = "Timber Block"
+        self.color = (150, 75, 0)
+        self.is_breakable = True
+        self.solidity_pickaxe = 50
+        self.solidity_axe = 20
+        self.drop = 4
+
+
+# Блок Верстака
+
+class WorkbenchBlock(Block):
+    def __init__(self, x, y):
+        super().__init__(9, x, y)
+
+        self.name = "Placed Workbench"
+        self.color = (252, 211, 59)
+        self.is_breakable = True
+        self.solidity_pickaxe = 50
+        self.solidity_axe = 20
+        self.drop = 5
+
+
+# Блок Печи
+
+class FurnaceBlock(Block):
+    def __init__(self, x, y):
+        super().__init__(10, x, y)
+
+        self.name = "Placed Furnace"
+        self.color = (112, 128, 144)
+        self.is_breakable = True
+        self.solidity_pickaxe = 30
+        self.solidity_axe = 1000
+        self.drop = 6
