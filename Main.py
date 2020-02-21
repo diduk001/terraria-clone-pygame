@@ -6,13 +6,12 @@ import Player
 
 def main():
     pygame.init()
-
     # Расширение игры
 
     height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
 
-    # Создание мира и игрока в ценре мира
+    # Создание мира и игрока в центре мира
 
     world = World.World(screen)
     player = Player.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
@@ -21,8 +20,8 @@ def main():
 
     fps = 60
     clock = pygame.time.Clock()
-    running = True
 
+    running = True
     while running:
         # Обработка событий
         if pygame.key.get_pressed()[32]:
@@ -52,6 +51,6 @@ def main():
 
         clock.tick(fps)
 
+
 if __name__ == '__main__':
-    world = list()
     main()

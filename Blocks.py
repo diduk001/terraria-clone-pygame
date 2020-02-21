@@ -4,14 +4,19 @@ from pygame import Rect
 
 class Block:
     size = 20
-    def __init__(self, id, x, y):
-        # id блока и его координаты в блоках;
 
-        self.id = id
+    # block_id блока и его координаты в блоках;
+
+    def __init__(self, block_id, x, y):
+        self.block_id = block_id
         self.x = x
         self.y = y
 
-        # Имя блока; его цвет отрисовки; возможность к разрушению; прочность блока добыче: киркой, топором; id итема, выпадающего при разрушении;
+        # Имя блока;
+        # Цвет отрисовки;
+        # Возможность разрушения;
+        # Прочность блока при добыче: киркой, топором;
+        # block_id итема, выпадающего при разрушении;
 
         self.name = str()
         self.color = tuple()
@@ -20,15 +25,15 @@ class Block:
         self.solidity_axe = int()
         self.drop = int()
 
-    # Функция отрисоки;
-
-    def show(self, screen):
+    # Метод отрисоки;
+    # x, y - координаты блока на экране в пикселях
+    def show(self, screen, x, y):
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
+        pygame.draw.rect(screen, self.color, Rect(x, y, self.size, self.size))
 
-    # Функция разрушения;
+    # Метод разрушения;
 
     def destroy(self, screen):
         pass
