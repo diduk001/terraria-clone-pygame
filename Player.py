@@ -55,7 +55,6 @@ class Player:
     def damage(self, x):
         self.hp -= x
 
-    def :
     def is_live(self):
         if self.hp > 0:
             return True
