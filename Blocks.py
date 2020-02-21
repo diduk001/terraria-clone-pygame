@@ -5,7 +5,7 @@ from pygame import Rect
 class Block:
     size = 20
     def __init__(self, id, x, y):
-        # id блока и его координаты;
+        # id блока и его координаты в блоках;
 
         self.id = id
         self.x = x
@@ -26,7 +26,7 @@ class Block:
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(self.x, self.y, self.size, self.size))
+        pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
     # Функция разрушения;
 
@@ -41,7 +41,7 @@ class Air(Block):
         super().__init__(0, x, y)
 
         self.name = "Air"
-        self.color = ()
+        self.color = (0, 0, 255)
         self.is_breakable = False
 
         # -1 значит проходимость игроком и мобами

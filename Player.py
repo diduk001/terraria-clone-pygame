@@ -16,7 +16,7 @@ class Player:
         self.vy = 0
         self.sprite = bool()
         self.hp = int()
-        self.jump_speed = -10
+        self.jump_speed = -30
         self.direction = bool()
         self.attack = int()
         self.speed = 10
@@ -32,11 +32,13 @@ class Player:
 
     def fall(self, world):
         bx, by = self.block_now()
-        print(bx, by)
-        by += 1
-        print(world[bx][by].name)
+        by += 2
         if (world[bx][by].solidity_pickaxe == -1 and self.vy == 0):
-            self.vy -= self.jump_speed
+            self.vy -= self.jump_speed // 3
+        elif world[bx][by].solidity_pickaxe != -1:
+            self.vy = 0
+
+
 
     def jump(self):
         if self.vy == 0:
