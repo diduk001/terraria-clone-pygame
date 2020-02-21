@@ -9,13 +9,13 @@ def main():
 
     # Расширение игры
 
-    height, width = 800, 400
+    height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
 
     # Создание мира и игрока в ценре мира
 
     world = World.World(screen)
-    player = Player.Player(world.width // 2, world.height // 2)
+    player = Player.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
 
     # Настройка fps, цикла игры
 
