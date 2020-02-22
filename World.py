@@ -1,5 +1,5 @@
 import pygame
-
+import Sprites
 import Blocks
 
 
@@ -27,9 +27,11 @@ class World:
             for x in range(self.width):
                 self.world[x][y] = Blocks.Dirt(x, y)
 
+        self.world[31][14] = Blocks.Dirt(31, 14)
+        self.world[11][14] = Blocks.Dirt(11, 14)
+        self.world[25][11] = Blocks.Dirt(25, 11)
+
     # Функция отрисовки
 
     def show(self):
-        for row in self.world:
-            for block in row:
-                block.show(self.screen)
+        Sprites.blocks_sprites.draw(self.screen)

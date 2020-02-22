@@ -1,5 +1,6 @@
 import pygame
 from Blocks import Block
+import Sprites
 import Mobs
 import Main
 from pygame.rect import Rect
@@ -10,8 +11,9 @@ class Player:
         # координаты по x, y
         self.x = x
         self.y = y
-        self.size_x = Block.size
-        self.size_y = 2 * Block.size
+        self.size = 1
+        self.weight = Block.size
+        self.height = 2 * Block.size
         self.vx = 0
         self.vy = 0
         self.sprite = bool()
@@ -20,39 +22,35 @@ class Player:
         self.direction = bool()
         self.attack = int()
         self.speed = 10
+        self.image = pygame.Surface((self.weight, self.height))
+        self.sprite = Sprites.PlayerSprite(self)
+        self.right = True
+        self.left = True
+        self.down = True
+        self.up = True
 
     def move(self):
-        self.x += self.vx
-        self.y += self.vy
-        if self.vy < 0:
-            self.vy += 5
+        self.sprite.move()
 
     def speed_x(self, x):
         self.vx += x
 
-    def fall(self, world):
-        bx, by = self.block_now()
-        by += 2
-        if (world[bx][by].solidity_pickaxe == -1 and self.vy == 0):
-            self.vy -= self.jump_speed // 3
-        elif world[bx][by].solidity_pickaxe != -1:
-            self.vy = 0
-
-
+    def fall(self):
+        if self.vy < 0:
+            self.vy -= -self.jump_speed
 
     def jump(self):
         if self.vy == 0:
             self.vy += self.jump_speed
 
     def block_now(self):
-        print()
         return self.x // Block.size, self.y // Block.size
 
     def collide(self):
         pass
 
     def show(self, screen):
-        pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.size_x, self.size_y))
+        Sprites.player_sprite.draw(screen)
 
     def damage(self, x):
         self.hp -= x

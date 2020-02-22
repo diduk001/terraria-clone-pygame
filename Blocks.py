@@ -1,9 +1,13 @@
 import pygame
+import Sprites
 from pygame import Rect
+
+blocks_sprites = pygame.sprite.Group()
 
 
 class Block:
     size = 20
+
     def __init__(self, id, x, y):
         # id блока и его координаты в блоках;
 
@@ -19,6 +23,10 @@ class Block:
         self.solidity_pickaxe = int()
         self.solidity_axe = int()
         self.drop = int()
+
+        # спрайт блока
+        self.image = pygame.Surface((self.size, self.size))
+        self.sprite = Sprites.BlockSprite(self)
 
     # Функция отрисоки;
 
@@ -49,6 +57,9 @@ class Air(Block):
         self.solidity_pickaxe = -1
         self.solidity_axe = -1
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
+
 
 # Блок Кореной Породы (JJBA: Diamond Is Unbreakable);
 
@@ -65,6 +76,9 @@ class JoJoStone(Block):
         self.solidity_pickaxe = 1000
         self.solidity_axe = 1000
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
+
 
 # Блок Грязи;
 
@@ -78,6 +92,9 @@ class Dirt(Block):
         self.solidity_pickaxe = 25
         self.solidity_axe = 25
         self.drop = 0
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Камня;
@@ -93,6 +110,8 @@ class Stone(Block):
         self.solidity_axe = 1000
         self.drop = 1
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 # Блок Медной Руды
 
@@ -106,6 +125,9 @@ class CopperOre(Block):
         self.solidity_pickaxe = 50
         self.solidity_axe = 1000
         self.drop = 2
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Железной Руды
@@ -121,6 +143,9 @@ class IronOre(Block):
         self.solidity_axe = 1000
         self.drop = 3
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
+
 
 # Блок Дерева
 
@@ -135,6 +160,8 @@ class Wood(Block):
         self.solidity_axe = 20
         self.drop = 4
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 # Блок Листвы
 
@@ -147,6 +174,9 @@ class Foliage(Block):
         self.is_breakable = True
         self.solidity_pickaxe = 5
         self.solidity_axe = 5
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Древесины
@@ -162,6 +192,9 @@ class TimberBlock(Block):
         self.solidity_axe = 20
         self.drop = 4
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
+
 
 # Блок Верстака
 
@@ -176,6 +209,9 @@ class WorkbenchBlock(Block):
         self.solidity_axe = 20
         self.drop = 5
 
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
+
 
 # Блок Печи
 
@@ -189,3 +225,6 @@ class FurnaceBlock(Block):
         self.solidity_pickaxe = 30
         self.solidity_axe = 1000
         self.drop = 6
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
