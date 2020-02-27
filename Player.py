@@ -37,7 +37,7 @@ class Player:
 
     def fall(self):
         if self.vy < 0:
-            self.vy -= -self.jump_speed
+            self.vy -= self.jump_speed
 
     def jump(self):
         if self.vy == 0:
