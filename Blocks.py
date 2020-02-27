@@ -20,6 +20,7 @@ class Block:
         self.name = str()
         self.color = tuple()
         self.is_breakable = bool()
+        self.is_passable = bool()
         self.solidity_pickaxe = int()
         self.solidity_axe = int()
         self.drop = int()
