@@ -1,11 +1,14 @@
+import pygame
+
 class Item:
-    def __init__(self, item_id):
-        # item_id итема;
+    def __init__(self, id):
+        # id итема;
 
-        self.item_id = item_id
+        self.id = id
 
-        # Имя итема; его цвет;
-        # Рецепт крафта (список кортежей (block_id материала, кол-во) );
+        # Имя итема
+        # Его цвет
+        # Рецепт крафта (список туплов(id материала, кол-во) );
         # Размер стака;
 
         self.name = str()
@@ -17,14 +20,14 @@ class Item:
 # Предметы, которые можно ставить;
 
 class PlaceableItem(Item):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # block_id блока, соответствующего текстуре;
+        # id блока, соответствующего текстуре;
 
         self.block = int()
 
-    # Метод размещения;
+    # функция размещения;
 
     def place(self, x, y):
         pass
@@ -33,14 +36,14 @@ class PlaceableItem(Item):
 # Предметы, на которых можно крафтить;
 
 class CraftItem(PlaceableItem):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # Список предметов (block_id), доступных для крафта;
+        # Список предметов (id), доступных для крафта;
 
         self.enable_to_craft = list()
 
-    # Метод крафта (обмена ресурсов на продукт);
+    # функция крафта (обмена ресурсов на продукт);
 
     def craft(self, id):
         pass
@@ -49,16 +52,14 @@ class CraftItem(PlaceableItem):
 # Пердметы - инструменты (мечи, кирки, топоры);
 
 class Instrument(Item):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # Инструменты не стакаются
+        # Инструменты не стакаются =(
 
         self.max_stack = 1
 
-        # Тип инструмента (меч, кирка, топор);
-        # Наносимый урон (есть у всех инструментов);
-        # Эффективность инструмента;
+        # Тип инструмента (меч, кирка, топор); Наносимый урон (есть у всех инструментов); Эффективность инструмента;
 
         self.type = int()
         self.damage = int()
@@ -156,7 +157,7 @@ class Furnace(CraftItem):
 
 class TimberSword(Instrument):
     def __init__(self):
-        super().__init__(7)
+        super.__init__(7)
 
         self.name = "Timber Sword"
         self.color = ()
