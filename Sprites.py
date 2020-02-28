@@ -59,7 +59,8 @@ class PlayerSprite(MySprite):
             # врезался в блок слева
             block = block_sprite.block
             if (block.name == 'Air'):
-                print(block.y * block.size + 1 - (self.player.y + 2 * block.size))
+                pass
+              #  print(block.y * block.size + 1 - (self.player.y + 2 * block.size))
             if (block.x + 1) * block.size == self.player.x + 1 and block.solidity_pickaxe != -1:
                 self.player.vx = 0
                 self.player.left = False

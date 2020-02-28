@@ -4,6 +4,7 @@ import Blocks
 import Player
 import Inventory
 
+
 def main():
     pygame.init()
 
@@ -16,7 +17,7 @@ def main():
 
     world = World.World(screen)
     player = Player.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
-    inventory = Inventory.Window()
+    inventory = Inventory.Inventory(1, 10, 3, 10, 10, 10)
     # Настройка fps, цикла игры
 
     fps = 60
@@ -29,10 +30,8 @@ def main():
             player.jump()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == 9:
-                if inventory.open:
-                    inventory.open = False
-                else:
-                    inventory.open = True
+                inventory.is_open = not inventory.is_open
+                inventory.to_swap = []
             if event.type == pygame.KEYDOWN:
                 if event.key == 100 and player.right:
                     player.speed_x(player.speed)
@@ -48,13 +47,11 @@ def main():
 
         world.show()
         player.show(screen)
-        if inventory.open:
-            inventory.show(screen)
+        inventory.show(screen)
         pygame.display.flip()
 
         # Обновление персонажа
         player.move()
-
 
         clock.tick(fps)
 
