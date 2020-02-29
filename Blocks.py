@@ -8,14 +8,16 @@ blocks_sprites = pygame.sprite.Group()
 class Block:
     size = 32
 
-    def __init__(self, id, x, y):
-        # id блока и его координаты в блоках;
-
-        self.id = id
+    def __init__(self, block_id, x, y):
+        self.block_id = block_id
         self.x = x
         self.y = y
 
-        # Имя блока; его цвет отрисовки; возможность к разрушению; прочность блока добыче: киркой, топором; id итема, выпадающего при разрушении;
+        # Имя блока;
+        # Цвет отрисовки;
+        # Возможность разрушения;
+        # Прочность блока при добыче: киркой, топором;
+        # block_id итема, выпадающего при разрушении;
 
         self.name = str()
         self.color = tuple()
@@ -36,7 +38,7 @@ class Block:
 
         pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
-    # Функция разрушения;
+    # Метод разрушения;
 
     def destroy(self, screen):
         pass

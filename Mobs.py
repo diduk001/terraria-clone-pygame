@@ -52,6 +52,8 @@ class Mobs:
             self.jump_now = True
             self.vy = self.jump_speed
 
+    # Метод нанесения урона Мобу
+
     def damage(self, x):
         self.hp -= x
 
@@ -59,6 +61,10 @@ class Mobs:
         if self.hp > 0:
             return True
         return False
+    # Метод, вызываемый при ударении Моба
+
+    def punch(self, mob):
+        mob.damage(self.attack)
 
 
 class Player(Mobs):
