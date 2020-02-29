@@ -17,6 +17,7 @@ def load_image(name, color_key=None):
 blocks_sprites = pygame.sprite.Group()
 mobs_sprites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
+border_sprites = pygame.sprite.Group()
 
 
 class MySprite(pygame.sprite.Sprite):
@@ -42,46 +43,72 @@ class BlockSprite(MySprite):
         self.block = block
 
 
-class PlayerSprite(MySprite):
-    def __init__(self, player):
-        super().__init__(player_sprite, player)
-        self.player = player
+class BorderSprites(pygame.sprite.Sprite):
+    def __init__(self, group, x, y, width, height):
+        super().__init__(group)
+        self.image = pygame.Surface((width, height))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
-    def move(self):
-        self.rect = self.rect.move(self.player.vx // 10, self.player.vy // 30)
-        self.player.x = self.rect.x
-        self.player.y = self.rect.y
-        self.player.up = True
-        self.player.down = True
-        self.player.left = True
-        self.player.right = True
-        for block_sprite in pygame.sprite.spritecollide(self, blocks_sprites, False):
-            # врезался в блок слева
-            block = block_sprite.block
-            if (block.name == 'Air'):
-                print(block.y * block.size + 1 - (self.player.y + 2 * block.size))
-            if (block.x + 1) * block.size == self.player.x + 1 and block.solidity_pickaxe != -1:
-                self.player.vx = 0
-                self.player.left = False
-            # врезался в блок справа
-            elif block.x * block.size + 1 == self.player.x + block.size and block.solidity_pickaxe != -1:
-                self.player.vx = 0
-                self.player.right = False
-            # врезался в блок сверху
-            elif (block.y + 1) * block.size == self.player.y + 1 and block.solidity_pickaxe != -1:
-                self.player.vy = max(0, self.player.vy)
-                self.player.up = False
-            # врезался в блок снизу
-            elif block.y * block.size + 1 == self.player.y + 2 * block.size and block.solidity_pickaxe != -1:
-                self.player.vy = min(0, self.player.vy)
-                print('hah')
-                self.player.down = False
-            elif block.y * block.size + 1 == self.player.y + 2 * block.size and block.solidity_pickaxe == 1:
-                self.player.vy = 1
-                print("YES")
+    def update_coordinates(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
 
 class MobSprite(MySprite):
     def __init__(self, mob):
         super().__init__(mobs_sprites, mob)
+        self.mob = mob
+        up = [self.mob.x, self.mob.y + self.mob.jump_speed, self.mob.width, -self.mob.jump_speed]
+        down = [self.mob.x, self.mob.y + self.mob.height, self.mob.width, -self.mob.jump_speed]
+        left = [self.mob.x - self.mob.speed, self.mob.y, self.mob.speed, self.mob.height]
+        right = [self.mob.x + self.mob.width, self.mob.y, self.mob.speed, self.mob.height]
+        self.up = BorderSprites(border_sprites, *up)
+        self.down = BorderSprites(border_sprites, *down)
+        self.left = BorderSprites(border_sprites, *left)
+        self.right = BorderSprites(border_sprites, *right)
+
+    def move(self):
+        # блоки в которые врезался игрок сверху
+        for block_sprite in pygame.sprite.spritecollide(self.up, blocks_sprites, False):
+            block = block_sprite.block
+            if block.solidity_pickaxe != -1:
+                self.mob.jump_now = False
+                self.mob.vy = max(0, self.mob.vy)
+                self.mob.up_free = False
+                self.mob.now_jump_time = 0
+
+        # блоки в которые врезался игрок снизу
+        for block_sprite in pygame.sprite.spritecollide(self.down, blocks_sprites, False):
+            block = block_sprite.block
+            if block.solidity_pickaxe != -1:
+                self.mob.vy = min(0, self.mob.vy)
+                self.mob.down_free = False
+            elif not self.mob.jump_now:
+                self.mob.vy = -self.mob.jump_speed
+
+        # блоки в которые врезался игрок слева
+        for block_sprite in pygame.sprite.spritecollide(self.left, blocks_sprites, False):
+            block = block_sprite.block
+            if block.solidity_pickaxe != -1:
+                self.mob.vx = max(0, self.mob.vx)
+                self.mob.right = False
+
+        # блоки в которые врезался игрок справа
+        for block_sprite in pygame.sprite.spritecollide(self.right, blocks_sprites, False):
+            block = block_sprite.block
+            if block.solidity_pickaxe != -1:
+                self.mob.vx = min(0, self.mob.vx)
+                self.mob.right = False
+        self.rect = self.rect.move(self.mob.vx, self.mob.vy)
+        self.update_coordinates()
+
+    def update_coordinates(self):
+        self.mob.x = self.rect.x
+        self.mob.y = self.rect.y
+        self.up.update_coordinates(self.mob.x, self.mob.y - 1)
+        self.down.update_coordinates(self.mob.x, self.mob.y + self.mob.height)
+        self.left.update_coordinates(self.mob.x - self.mob.speed, self.mob.y)
+        self.right.update_coordinates(self.mob.x + self.mob.width, self.mob.y)
 
