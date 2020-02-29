@@ -4,6 +4,7 @@ import Blocks
 import Mobs
 import Inventory
 
+
 def main():
     pygame.init()
     # Расширение игры
