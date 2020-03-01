@@ -58,13 +58,12 @@ class PlayerSprite(MySprite):
         for block_sprite in pygame.sprite.spritecollide(self, blocks_sprites, False):
             # врезался в блок слева
             block = block_sprite.block
-            if (block.name == 'Air'):
-                print(block.y * block.size + 1 - (self.player.y + 2 * block.size))
             if (block.x + 1) * block.size == self.player.x + 1 and block.solidity_pickaxe != -1:
                 self.player.vx = 0
                 self.player.left = False
             # врезался в блок справа
-            elif block.x * block.size + 1 == self.player.x + block.size and block.solidity_pickaxe != -1:
+            elif block.x * block.size + 1 == self.player.x + block.size and (
+                    block.solidity_pickaxe != -1):
                 self.player.vx = 0
                 self.player.right = False
             # врезался в блок сверху
@@ -72,16 +71,15 @@ class PlayerSprite(MySprite):
                 self.player.vy = max(0, self.player.vy)
                 self.player.up = False
             # врезался в блок снизу
-            elif block.y * block.size + 1 == self.player.y + 2 * block.size and block.solidity_pickaxe != -1:
+            elif block.y * block.size + 1 == self.player.y + 2 * block.size and (
+                    block.solidity_pickaxe != -1):
                 self.player.vy = min(0, self.player.vy)
-                print('hah')
                 self.player.down = False
-            elif block.y * block.size + 1 == self.player.y + 2 * block.size and block.solidity_pickaxe == 1:
+            elif block.y * block.size + 1 == self.player.y + 2 * block.size and (
+                    block.solidity_pickaxe == 1):
                 self.player.vy = 1
-                print("YES")
 
 
 class MobSprite(MySprite):
     def __init__(self, mob):
         super().__init__(mobs_sprites, mob)
-

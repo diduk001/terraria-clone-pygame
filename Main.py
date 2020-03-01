@@ -12,11 +12,24 @@ def main():
     height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
 
-    # Создание мира и игрока в ценре мира
+    # Создание мира и игрока в центре мира, на блоке
 
     world = World.World(screen)
-    player = Player.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
+
+    # Выбор места для спавна игрока
+
+    spawn_x_coord = world.width // 2 * Blocks.Block.size + 1
+    spawn_y_coord = int()
+    for spawn_y in range(1, world.height * Blocks.Block.size, Blocks.Block.size):
+        if isinstance(world.get_block(spawn_x_coord, spawn_y + 2 * Blocks.Block.size), Blocks.Dirt):
+            spawn_y_coord = spawn_y
+            break
+
+    # Создание игрока, инвентаря
+
+    player = Player.Player(spawn_x_coord, spawn_y_coord - 1)
     inventory = Inventory.Window()
+
     # Настройка fps, цикла игры
 
     fps = 60
@@ -55,9 +68,9 @@ def main():
         # Обновление персонажа
         player.move()
 
-
         clock.tick(fps)
 
+
 if __name__ == '__main__':
-    world = list()
+    world = World.World
     main()

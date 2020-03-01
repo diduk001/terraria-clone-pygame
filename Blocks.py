@@ -40,12 +40,19 @@ class Block:
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
+        pygame.draw.rect(screen, self.color,
+                         Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
     # Функция разрушения;
 
     def destroy(self, screen):
         pass
+
+    def __str__(self):
+        return f"{self.name} Block on {self.x}, {self.y}"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 # Блок Воздуха;

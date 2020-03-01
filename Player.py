@@ -1,9 +1,6 @@
 import pygame
 from Blocks import Block
 import Sprites
-import Mobs
-import Main
-from pygame.rect import Rect
 
 
 class Player:
