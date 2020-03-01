@@ -54,6 +54,21 @@ class Inventory:
 
         self.last_click_is_right = bool()
 
+        self.workbench_is_available = False
+        self.furnace_is_available = False
+        self.enable_to_craft = [Items.Workbench(), Items.Furnace()]
+
+        self.chosen_recipe = 1
+        self.craft_coordinates = [(0, 0) for i in range(len(self.enable_to_craft))]
+        self.craft_button_coordinates = (self.x + self.width * (self.cell_size + self.frame_size)
+                                         + 2.5 * self.frame_size,
+                                         self.y + self.frame_size / 2)
+
+        for i in range(len(self.enable_to_craft)):
+            self.craft_coordinates[i] = (self.x + self.width * (self.frame_size + self.cell_size) + 3 * self.frame_size,
+                                         self.y + (self.qapheight + i) * (self.frame_size + self.cell_size)
+                                         + 3 * self.frame_size)
+
     def show(self, screen):
 
         # Отрисовка панели быстрого доступа
@@ -126,7 +141,53 @@ class Inventory:
             x, y = self.coordinates[i][j]
             pygame.draw.rect(screen, (200, 100, 100), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
 
-        # Отрисовка предметов
+        # Отрисовка крафтов
+        if self.is_open:
+
+            # Отрисовка кнопки крафта
+            x, y = self.craft_button_coordinates
+            size = self.cell_size + self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, size, size), 0)
+            x += self.frame_size / 2
+            y += self.frame_size / 2
+            size -= self.frame_size
+            pygame.draw.rect(screen, (174, 174, 174), (x, y, size, size), 0)
+            x += self.frame_size
+            y += self.frame_size
+            size -= 2 * self.frame_size
+            pygame.draw.rect(screen, (200, 100, 100), (x, y, size, size), 0)
+
+            height = len(self.enable_to_craft) * (self. frame_size + self.cell_size) + self.frame_size
+            width = 2 * self.frame_size + self.cell_size
+            x = self.x + self.width * (self.frame_size + self.cell_size) + 2 * self.frame_size
+            y = self.y + self.qapheight * (self.frame_size + self.cell_size) + 2 * self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, width, height), 0)
+            for i in range(len(self.enable_to_craft)):
+                x, y = self.craft_coordinates[i]
+                pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
+                item = self.enable_to_craft[i]
+                pygame.draw.rect(screen, item.color, (x + 2, y + 2, 28, 28), 0)
+                font = pygame.font.Font("MainFont.fon", 16)
+                text = font.render(str(item.craft_count), 1, (100, 230, 100))
+                screen.blit(text, (x + 4, y + 2))
+            x, y = self.craft_coordinates[self.chosen_recipe]
+            item = self.enable_to_craft[self.chosen_recipe]
+            pygame.draw.rect(screen, (100, 200, 200), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
+            x += self.cell_size + self.frame_size
+            y -= self.frame_size
+            width = len(item.recipe) * (self.frame_size + self.cell_size)
+            height = self.cell_size + 2 * self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, width, height), 0)
+            y += self.frame_size
+            for i in range(len(item.recipe)):
+                pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
+                ingredient, count = item.recipe[i]
+                pygame.draw.rect(screen, ingredient.color, (x + 2, y + 2, 28, 28), 0)
+                font = pygame.font.Font("MainFont.fon", 16)
+                text = font.render(str(count), 1, (100, 230, 100))
+                screen.blit(text, (x + 4, y + 2))
+                x += self.cell_size + self.frame_size
+
 
     def left_swap(self):
         x1, y1 = self.to_swap[0]
@@ -185,6 +246,11 @@ class Inventory:
     def get_cell(self, mouse_pos):
         x, y = mouse_pos
         if self.is_open:
+            cell_x, cell_y = self.craft_button_coordinates
+            cell_x += self.frame_size / 2
+            cell_y += self.frame_size / 2
+            if cell_x <= x <= cell_x +self.cell_size and cell_y <= y <= cell_y + self.cell_size:
+                return -2, -2
             for i in range(self.qapheight + self.bpheight):
                 for j in range(self.width):
                     cell_x, cell_y = self.coordinates[i][j]
@@ -202,16 +268,17 @@ class Inventory:
         return None
 
     def left_clicked(self, mouse_pos):
-        print("left")
         if self.last_click_is_right:
             self.last_click_is_right = False
             self.to_swap = []
             return
         cell = self.get_cell(mouse_pos)
-        print(cell)
         if cell is None:
-            return
+                return
         if self.is_open:
+            if cell == (-2, -2):
+                self.craft()
+                return
             self.to_swap += [cell]
             if len(self.to_swap) == 2:
                 self.left_swap()
@@ -219,10 +286,10 @@ class Inventory:
             self.chosen_cell = cell
 
     def right_clicked(self, mouse_pos):
-        print("right")
         self.last_click_is_right = True
         cell = self.get_cell(mouse_pos)
-        print(cell)
+        if cell == (-2, -2):
+            return
         if cell is None:
             return
         elif not self.is_open:
@@ -232,3 +299,81 @@ class Inventory:
         else:
             self.to_swap += [cell]
             self.right_swap()
+
+    def up_chosen_cell(self):
+        if self.chosen_cell == ():
+            self.chosen_cell = (0, 0)
+            return
+        x, y = self.chosen_cell
+        print(x, y)
+        if y == 0:
+            self.chosen_cell = (x, self.width - 1)
+        else:
+            self.chosen_cell = (x, y - 1)
+
+    def down_chosen_cell(self):
+        if self.chosen_cell == ():
+            self.chosen_cell = (0, 9)
+            return
+        x, y = self.chosen_cell
+        print(x, y)
+        if y == self.width - 1:
+            self.chosen_cell = (x, 0)
+        else:
+            self.chosen_cell = (x, y + 1)
+
+    def up_chosen_recipe(self):
+        if self.chosen_recipe != 0:
+            self.chosen_recipe -= 1
+
+    def down_chosen_recipe(self):
+        if self.chosen_recipe != len(self.enable_to_craft) - 1:
+            self.chosen_recipe += 1
+
+    def item_count(self, item_id):
+        count = 0
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == item_id:
+                    count += self.content[i][j][1]
+        return count
+
+    def item_delete(self, item_id, count):
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == item_id:
+                    if self.content[i][j][1] > count:
+                        self.content[i][j][1] -= count
+                        return
+                    else:
+                        count -= self.content[i][j][1]
+                        self.content[i][j] = [Items.VoidItem(), 0]
+
+    def item_add(self, item, count):
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == Items.VoidItem().id:
+                    if count < item.max_stack:
+                        self.content[i][j] = [item, count]
+                        count = 0
+                    else:
+                        count -= item.max_stack
+                        self.content[i][j] = [item, item.max_stack]
+                elif self.content[i][j][0].id == item.id:
+                    if self.content[i][j][1] + count < item.max_stack:
+                        self.content[i][j][1] += count
+                        count = 0
+                    else:
+                        count -= item.max_stack - self.content[i][j][1]
+                        self.content[i][j][1] = item.max_stack
+                if count == 0:
+                    return
+
+    def craft(self):
+        item = self.enable_to_craft[self.chosen_recipe]
+        for ingredient, count in item.recipe:
+            if self.item_count(ingredient.id) < count:
+                return
+        for ingredient, count in item.recipe:
+            self.item_delete(ingredient.id, count)
+        self.item_add(item, item.craft_count)

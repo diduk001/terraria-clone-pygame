@@ -21,6 +21,7 @@ class Item:
         self.name = str()
         self.color = tuple()
         self.recipe = list(tuple())
+        self.craft_count = int()
         self.max_stack = int()
 
     def update_coordinates(self, x, y):
@@ -39,6 +40,7 @@ class VoidItem(Item):
         self.name = "Void"
         self.color = ()
         self.recipe = []
+        self.craft_count = 0
         self.max_stack = 0
 
 
@@ -64,14 +66,9 @@ class CraftItem(PlaceableItem):
     def __init__(self, item_id):
         super().__init__(item_id)
 
-        # Список предметов (block_id), доступных для крафта;
-
+        # Список предметов (id), доступных для крафта;
+        self.craft_count = 1
         self.enable_to_craft = list()
-
-    # Метод крафта (обмена ресурсов на продукт);
-
-    def craft(self, id):
-        pass
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
@@ -80,8 +77,8 @@ class Instrument(Item):
     def __init__(self, item_id):
         super().__init__(item_id)
 
-        # Инструменты не стакаются
-
+        # Инструменты не стакаются =(
+        self.craft_count = 1
         self.max_stack = 1
 
         # Тип инструмента (меч, кирка, топор);
@@ -164,7 +161,7 @@ class Workbench(CraftItem):
 
         self.name = "Workbench"
         self.color = (252, 211, 59)
-        self.recipe = []
+        self.recipe = [(Timber(), 10)]
         self.max_stack = 16
         self.block = 9
         self.enable_to_craft = []
@@ -176,7 +173,7 @@ class Furnace(CraftItem):
 
         self.name = "Furnace"
         self.color = (112, 128, 144)
-        self.recipe = []
+        self.recipe = [(QuarriedStone(), 20), (Timber(), 10)]
         self.max_stack = 16
         self.block = 10
         self.enable_to_craft = []
