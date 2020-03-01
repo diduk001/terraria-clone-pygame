@@ -1,8 +1,10 @@
 import pygame
-import World
+
 import Blocks
-import Player
 import Inventory
+import Player
+import World
+
 
 def main():
     pygame.init()
