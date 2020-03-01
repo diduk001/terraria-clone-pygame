@@ -6,7 +6,7 @@ blocks_sprites = pygame.sprite.Group()
 
 
 class Block:
-    size = 20
+    size = 32
 
     def __init__(self, id, x, y):
         # id блока и его координаты в блоках;
