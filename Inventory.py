@@ -60,6 +60,9 @@ class Inventory:
 
         self.chosen_recipe = 1
         self.craft_coordinates = [(0, 0) for i in range(len(self.enable_to_craft))]
+        self.craft_button_coordinates = (self.x + self.width * (self.cell_size + self.frame_size)
+                                         + 2.5 * self.frame_size,
+                                         self.y + self.frame_size / 2)
 
         for i in range(len(self.enable_to_craft)):
             self.craft_coordinates[i] = (self.x + self.width * (self.frame_size + self.cell_size) + 3 * self.frame_size,
@@ -140,12 +143,25 @@ class Inventory:
 
         # Отрисовка крафтов
         if self.is_open:
+
+            # Отрисовка кнопки крафта
+            x, y = self.craft_button_coordinates
+            size = self.cell_size + self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, size, size), 0)
+            x += self.frame_size / 2
+            y += self.frame_size / 2
+            size -= self.frame_size
+            pygame.draw.rect(screen, (174, 174, 174), (x, y, size, size), 0)
+            x += self.frame_size
+            y += self.frame_size
+            size -= 2 * self.frame_size
+            pygame.draw.rect(screen, (200, 100, 100), (x, y, size, size), 0)
+
             height = len(self.enable_to_craft) * (self. frame_size + self.cell_size) + self.frame_size
             width = 2 * self.frame_size + self.cell_size
             x = self.x + self.width * (self.frame_size + self.cell_size) + 2 * self.frame_size
             y = self.y + self.qapheight * (self.frame_size + self.cell_size) + 2 * self.frame_size
             pygame.draw.rect(screen, (149, 149, 149), (x, y, width, height), 0)
-
             for i in range(len(self.enable_to_craft)):
                 x, y = self.craft_coordinates[i]
                 pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
@@ -154,7 +170,6 @@ class Inventory:
                 font = pygame.font.Font("MainFont.fon", 16)
                 text = font.render(str(item.craft_count), 1, (100, 230, 100))
                 screen.blit(text, (x + 4, y + 2))
-
             x, y = self.craft_coordinates[self.chosen_recipe]
             item = self.enable_to_craft[self.chosen_recipe]
             pygame.draw.rect(screen, (100, 200, 200), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
@@ -231,6 +246,11 @@ class Inventory:
     def get_cell(self, mouse_pos):
         x, y = mouse_pos
         if self.is_open:
+            cell_x, cell_y = self.craft_button_coordinates
+            cell_x += self.frame_size / 2
+            cell_y += self.frame_size / 2
+            if cell_x <= x <= cell_x +self.cell_size and cell_y <= y <= cell_y + self.cell_size:
+                return -2, -2
             for i in range(self.qapheight + self.bpheight):
                 for j in range(self.width):
                     cell_x, cell_y = self.coordinates[i][j]
@@ -248,16 +268,17 @@ class Inventory:
         return None
 
     def left_clicked(self, mouse_pos):
-        print("left")
         if self.last_click_is_right:
             self.last_click_is_right = False
             self.to_swap = []
             return
         cell = self.get_cell(mouse_pos)
-        print(cell)
         if cell is None:
-            return
+                return
         if self.is_open:
+            if cell == (-2, -2):
+                self.craft()
+                return
             self.to_swap += [cell]
             if len(self.to_swap) == 2:
                 self.left_swap()
@@ -265,10 +286,10 @@ class Inventory:
             self.chosen_cell = cell
 
     def right_clicked(self, mouse_pos):
-        print("right")
         self.last_click_is_right = True
         cell = self.get_cell(mouse_pos)
-        print(cell)
+        if cell == (-2, -2):
+            return
         if cell is None:
             return
         elif not self.is_open:
@@ -349,4 +370,10 @@ class Inventory:
                     return
 
     def craft(self):
-        pass
+        item = self.enable_to_craft[self.chosen_recipe]
+        for ingredient, count in item.recipe:
+            if self.item_count(ingredient.id) < count:
+                return
+        for ingredient, count in item.recipe:
+            self.item_delete(ingredient.id, count)
+        self.item_add(item, item.craft_count)
