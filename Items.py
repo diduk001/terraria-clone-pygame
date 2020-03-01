@@ -1,12 +1,18 @@
 import pygame
+import Sprites
 
 
 class Item:
     def __init__(self, item_id):
         # item_id итема;
 
-        self.item_id = item_id
-
+        self.id = item_id
+        self.size = 1
+        self.width = 28
+        self.height = 28
+        self.image = pygame.Surface((self.width, self.height))
+        self.x = int()
+        self.y = int()
         # Имя итема
         # Его цвет
         # Рецепт крафта (список туплов(id материала, кол-во) );
@@ -17,7 +23,13 @@ class Item:
         self.recipe = list(tuple())
         self.max_stack = int()
 
+    def update_coordinates(self, x, y):
+        self.x = x
+        self.y = y
 
+    def drop(self, x, y):
+        self.update_coordinates(x, y)
+        self.sprite = Sprites.ItemSprite(self)
 # Предмет - пустая ячейка
 
 class VoidItem(Item):
@@ -32,6 +44,7 @@ class VoidItem(Item):
 
 # Предметы, которые можно ставить;
 
+
 class PlaceableItem(Item):
     def __init__(self, item_id):
         super().__init__(item_id)
@@ -44,7 +57,6 @@ class PlaceableItem(Item):
 
     def place(self, x, y):
         pass
-
 
 # Предметы, на которых можно крафтить;
 

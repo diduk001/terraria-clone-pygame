@@ -18,6 +18,7 @@ blocks_sprites = pygame.sprite.Group()
 mobs_sprites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
 border_sprites = pygame.sprite.Group()
+item_sprites = pygame.sprite.Group()
 
 
 class MySprite(pygame.sprite.Sprite):
@@ -56,6 +57,26 @@ class BorderSprites(pygame.sprite.Sprite):
         self.rect.y = y
 
 
+class ItemSprite(MySprite):
+    def __init__(self, item):
+        super().__init__(item_sprites, item)
+        self.item = item
+        self.vy = 0
+        self.image.fill(self.item.color)
+
+    def move(self):
+        for block_sprite in pygame.sprite.spritecollide(self, blocks_sprites, False):
+            block = block_sprite.block
+            dirt = False
+            if not block.is_passable:
+                dirt = True
+                self.vy = 0
+                self.down_free = False
+            elif not dirt and self.vy == 0:
+                self.vy = 2
+        print(block.x, block.y)
+        self.rect.y += self.vy
+
 class MobSprite(MySprite):
     def __init__(self, mob):
         super().__init__(mobs_sprites, mob)
@@ -73,32 +94,35 @@ class MobSprite(MySprite):
         # блоки в которые врезался игрок сверху
         for block_sprite in pygame.sprite.spritecollide(self.up, blocks_sprites, False):
             block = block_sprite.block
-            if block.solidity_pickaxe != -1:
+            if not block.is_passable:
                 self.mob.jump_now = False
                 self.mob.vy = max(0, self.mob.vy)
                 self.mob.up_free = False
                 self.mob.now_jump_time = 0
 
         # блоки в которые врезался игрок снизу
+        dirt = False
         for block_sprite in pygame.sprite.spritecollide(self.down, blocks_sprites, False):
             block = block_sprite.block
-            if block.solidity_pickaxe != -1:
+
+            if not block.is_passable:
+                dirt = True
                 self.mob.vy = min(0, self.mob.vy)
                 self.mob.down_free = False
-            elif not self.mob.jump_now:
+            elif not dirt and not self.mob.jump_now:
                 self.mob.vy = -self.mob.jump_speed
 
         # блоки в которые врезался игрок слева
         for block_sprite in pygame.sprite.spritecollide(self.left, blocks_sprites, False):
             block = block_sprite.block
-            if block.solidity_pickaxe != -1:
+            if not block.is_passable:
                 self.mob.vx = max(0, self.mob.vx)
                 self.mob.right = False
 
         # блоки в которые врезался игрок справа
         for block_sprite in pygame.sprite.spritecollide(self.right, blocks_sprites, False):
             block = block_sprite.block
-            if block.solidity_pickaxe != -1:
+            if not block.is_passable:
                 self.mob.vx = min(0, self.mob.vx)
                 self.mob.right = False
         self.rect = self.rect.move(self.mob.vx, self.mob.vy)
@@ -111,4 +135,5 @@ class MobSprite(MySprite):
         self.down.update_coordinates(self.mob.x, self.mob.y + self.mob.height)
         self.left.update_coordinates(self.mob.x - self.mob.speed, self.mob.y)
         self.right.update_coordinates(self.mob.x + self.mob.width, self.mob.y)
+
 

@@ -25,7 +25,7 @@ class World:
 
         for x in range(self.width):
             for y in range(self.height // 2, self.height):
-                self.world[x][y].destroy()
+                self.world[x][y].destroy(delete=False)
                 self.world[x][y] = Blocks.Dirt(x, y)
         self.world[6][10] = Blocks.Dirt(6, 10)
         self.world[11][11] = Blocks.Dirt(11, 11)
@@ -35,3 +35,11 @@ class World:
     def show(self):
         Sprites.blocks_sprites.draw(self.screen)
         Sprites.mobs_sprites.draw(self.screen)
+        Sprites.item_sprites.draw(self.screen)
+
+    def update(self):
+        for x, y in Blocks.deleted:
+            self.world[x][y] = Blocks.Air(x, y)
+        Blocks.deleted = []
+        for sprite in Sprites.item_sprites:
+            sprite.move()

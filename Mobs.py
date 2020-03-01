@@ -1,5 +1,6 @@
 import pygame
 from Blocks import Block
+import Main
 import Sprites
 
 
@@ -81,9 +82,26 @@ class Player(Mobs):
         self.efficiency_pickaxe = 1
         self.efficiency_axe = 1
         self.hand = None
+        self.range = 4
 
     def mine(self, block):
-        block.mine(self.efficiency_pickaxe)
+        if block.is_breakable:
+            block.mine(self.efficiency_pickaxe)
 
     def chop(self, block):
-        block.chop(self.efficiency_axe)
+        if block.is_breakable:
+            block.chop(self.efficiency_axe)
+
+    def left_clicked(self, block):
+        player_block_x = self.x // Block.size
+        player_block_y = self.y // Block.size
+        if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
+            if self.hand is None:
+                if block.chop_or_mine():
+                    self.chop(block)
+                else:
+                    self.mine(block)
+            elif self.hand.type == 1:
+                self.mine(block)
+            elif self.hand.type == 2:
+                self.chop(block)

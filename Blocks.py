@@ -1,9 +1,9 @@
 import pygame
 import Sprites
+import Items
 from pygame import Rect
 
-blocks_sprites = pygame.sprite.Group()
-
+deleted = []
 
 class Block:
     size = 32
@@ -41,18 +41,27 @@ class Block:
         pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
     # Метод разрушения;
-    def destroy(self):
+    def destroy(self, delete=True):
         self.sprite.delete()
+        if not self.is_passable:
+            self.drop.drop(self.x * self.size, self.y * self.size)
+        if delete:
+            deleted.append((self.x, self.y))
 
     def mine(self, x):
         self.solidity_pickaxe -= x
-        if self.solidity_pickaxe <= 0:
+        if self.is_breakable and self.solidity_pickaxe <= 0:
             self.destroy()
 
     def chop(self, x):
         self.solidity_axe -= x
-        if self.solidity_axe <= 0:
+        if self.is_breakable and self.solidity_axe <= 0:
             self.destroy()
+
+    def chop_or_mine(self):
+        if self.solidity_axe > self.solidity_pickaxe:
+            return True
+        return False
 
 # Блок Воздуха;
 
@@ -100,7 +109,7 @@ class Dirt(Block):
         self.is_passable = False
         self.solidity_pickaxe = 25
         self.solidity_axe = 25
-        self.drop = 0
+        self.drop = Items.DugDirt()
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -118,7 +127,7 @@ class Stone(Block):
         self.is_passable = False
         self.solidity_pickaxe = 35
         self.solidity_axe = 1000
-        self.drop = 1
+        self.drop = Items.QuarriedStone
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -136,7 +145,7 @@ class CopperOre(Block):
         self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 1000
-        self.drop = 2
+        self.drop = Items.QuarriedCopperOre
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -154,7 +163,7 @@ class IronOre(Block):
         self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 1000
-        self.drop = 3
+        self.drop = Items.QuarriedIronOre
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -172,7 +181,7 @@ class Wood(Block):
         self.is_passable = True
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
-        self.drop = 4
+        self.drop = Items.Timber
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -207,7 +216,7 @@ class TimberBlock(Block):
         self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
-        self.drop = 4
+        self.drop = Items.Timber
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -225,7 +234,7 @@ class WorkbenchBlock(Block):
         self.is_passable = True
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
-        self.drop = 5
+        self.drop = Items.Workbench
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)
@@ -243,7 +252,7 @@ class FurnaceBlock(Block):
         self.is_passable = True
         self.solidity_pickaxe = 30
         self.solidity_axe = 1000
-        self.drop = 6
+        self.drop = Items.Furnace
 
         self.image.fill(self.color)
         self.sprite.update_image(self.image)

@@ -5,6 +5,13 @@ import Mobs
 import Inventory
 import Items
 
+global world
+
+
+def block_coordinates(coordinates):
+    return coordinates[0] // Blocks.Block.size, coordinates[1] // Blocks.Block.size
+
+
 def main():
     pygame.init()
     # Расширение игры
@@ -34,15 +41,14 @@ def main():
             player.move_right()
         if pygame.key.get_pressed()[97]:
             player.move_left()
+        if pygame.mouse.get_pressed()[0]:
+            x, y = block_coordinates(pygame.mouse.get_pos())
+            player.left_clicked(world.world[x][y])
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and (event.key == 32 or event.key == 119):
                 player.jump()
 
             if event.type == pygame.KEYDOWN and event.key == 9:
-                if inventory.is_open:
-                    inventory.is_open = False
-                else:
-                    inventory.is_open = True
                 inventory.is_open = not inventory.is_open
                 inventory.to_swap = []
 
@@ -55,7 +61,9 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+
         world.show()
+        world.update()
         inventory.show(screen)
         pygame.display.flip()
 
@@ -67,4 +75,5 @@ def main():
 
 
 if __name__ == '__main__':
+    world = []
     main()
