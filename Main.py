@@ -17,6 +17,7 @@ def main():
     world = World.World(screen)
     player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+
     # Настройка fps, цикла игры
 
     fps = 120
@@ -34,6 +35,9 @@ def main():
                 player.jump()
             if event.type == pygame.KEYDOWN and event.key == 9:
                 inventory.is_open = not inventory.is_open
+                inventory.to_swap = []
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                inventory.clicked(event.pos)
             if event.type == pygame.QUIT:
                 running = False
 
