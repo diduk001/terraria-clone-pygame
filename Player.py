@@ -47,7 +47,6 @@ class Player:
         self.vx = 0
         if self.jump_now:
             self.now_jump_time += 1
-            print(self.now_jump_time)
         if self.now_jump_time == self.jump_time:
             self.now_jump_time = 0
             self.jump_now = False
