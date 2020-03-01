@@ -3,7 +3,7 @@ import World
 import Blocks
 import Mobs
 import Inventory
-
+import Items
 
 def main():
     pygame.init()
@@ -16,7 +16,12 @@ def main():
 
     world = World.World(screen)
     player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
-    inventory = Inventory.Inventory(1, 9, 3, 9, 0, 0)
+    inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+    inventory.content[0][0] = [Items.DugDirt(), 2]
+    inventory.content[3][2] = [Items.QuarriedStone(), 1]
+    inventory.content[0][9] = [Items.QuarriedCopperOre(), 100]
+    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
+
     # Настройка fps, цикла игры
 
     fps = 120
@@ -32,17 +37,26 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and (event.key == 32 or event.key == 119):
                 player.jump()
+
             if event.type == pygame.KEYDOWN and event.key == 9:
                 if inventory.is_open:
                     inventory.is_open = False
                 else:
                     inventory.is_open = True
+                inventory.is_open = not inventory.is_open
+                inventory.to_swap = []
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    inventory.left_clicked(event.pos)
+                if event.button == 3:
+                    inventory.right_clicked(event.pos)
+
             if event.type == pygame.QUIT:
                 running = False
 
         world.show()
-        if inventory.is_open:
-            inventory.show(screen)
+        inventory.show(screen)
         pygame.display.flip()
 
         # Обновление персонажа
