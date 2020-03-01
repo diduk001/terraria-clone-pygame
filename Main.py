@@ -19,8 +19,8 @@ def main():
     player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
     inventory.content[0][0] = [Items.DugDirt(), 2]
-    inventory.content[3][2] = [Items.QuarriedStone(), 1]
-    inventory.content[0][9] = [Items.QuarriedCopperOre(), 100]
+    inventory.content[3][2] = [Items.Timber(), 100]
+    inventory.content[0][9] = [Items.QuarriedStone(), 100]
     inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Настройка fps, цикла игры
@@ -48,6 +48,16 @@ def main():
                     inventory.left_clicked(event.pos)
                 if event.button == 3:
                     inventory.right_clicked(event.pos)
+                if event.button == 4:
+                    if inventory.is_open:
+                        pass
+                    else:
+                        inventory.up_chosen_cell()
+                if event.button == 5:
+                    if inventory.is_open:
+                        pass
+                    else:
+                        inventory.down_chosen_cell()
 
             if event.type == pygame.QUIT:
                 running = False

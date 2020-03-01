@@ -54,6 +54,10 @@ class Inventory:
 
         self.last_click_is_right = bool()
 
+        self.workbench_is_available = False
+        self.furnace_is_available = False
+        self.enable_to_craft = [Items.Workbench(), Items.Furnace()]
+
     def show(self, screen):
 
         # Отрисовка панели быстрого доступа
@@ -125,8 +129,6 @@ class Inventory:
         for i, j in self.to_swap:
             x, y = self.coordinates[i][j]
             pygame.draw.rect(screen, (200, 100, 100), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
-
-        # Отрисовка предметов
 
     def left_swap(self):
         x1, y1 = self.to_swap[0]
@@ -232,3 +234,67 @@ class Inventory:
         else:
             self.to_swap += [cell]
             self.right_swap()
+
+    def up_chosen_cell(self):
+        if self.chosen_cell == ():
+            self.chosen_cell = (0, 0)
+            return
+        x, y = self.chosen_cell
+        print(x, y)
+        if y == 0:
+            self.chosen_cell = (x, self.width - 1)
+        else:
+            self.chosen_cell = (x, y - 1)
+
+    def down_chosen_cell(self):
+        if self.chosen_cell == ():
+            self.chosen_cell = (0, 9)
+            return
+        x, y = self.chosen_cell
+        print(x, y)
+        if y == self.width - 1:
+            self.chosen_cell = (x, 0)
+        else:
+            self.chosen_cell = (x, y + 1)
+
+    def item_count(self, item_id):
+        count = 0
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == item_id:
+                    count += self.content[i][j][1]
+        return count
+
+    def item_delete(self, item_id, count):
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == item_id:
+                    if self.content[i][j][1] > count:
+                        self.content[i][j][1] -= count
+                        return
+                    else:
+                        count -= self.content[i][j][1]
+                        self.content[i][j] = [Items.VoidItem(), 0]
+
+    def item_add(self, item, count):
+        for i in range(self.qapheight + self.bpheight):
+            for j in range(self.width):
+                if self.content[i][j][0].id == Items.VoidItem().id:
+                    if count < item.max_stack:
+                        self.content[i][j] = [item, count]
+                        count = 0
+                    else:
+                        count -= item.max_stack
+                        self.content[i][j] = [item, item.max_stack]
+                elif self.content[i][j][0].id == item.id:
+                    if self.content[i][j][1] + count < item.max_stack:
+                        self.content[i][j][1] += count
+                        count = 0
+                    else:
+                        count -= item.max_stack - self.content[i][j][1]
+                        self.content[i][j][1] = item.max_stack
+                if count == 0:
+                    return
+
+    def craft(self):
+        pass

@@ -150,7 +150,7 @@ class Workbench(CraftItem):
 
         self.name = "Workbench"
         self.color = (252, 211, 59)
-        self.recipe = []
+        self.recipe = [(Timber(), 10)]
         self.max_stack = 16
         self.block = 9
         self.enable_to_craft = []
@@ -162,7 +162,7 @@ class Furnace(CraftItem):
 
         self.name = "Furnace"
         self.color = (112, 128, 144)
-        self.recipe = []
+        self.recipe = [(QuarriedStone(), 20), (Timber(), 10)]
         self.max_stack = 16
         self.block = 10
         self.enable_to_craft = []
