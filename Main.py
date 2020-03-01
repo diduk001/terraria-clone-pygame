@@ -57,6 +57,8 @@ def main():
                     inventory.left_clicked(event.pos)
                 if event.button == 3:
                     inventory.right_clicked(event.pos)
+                    x, y = block_coordinates(pygame.mouse.get_pos())
+                    player.right_clicked(world.world[x][y])
                 if event.button == 4:
                     if inventory.is_open:
                         inventory.up_chosen_recipe()
@@ -76,7 +78,7 @@ def main():
         world.update()
         inventory.show(screen)
         pygame.display.flip()
-
+        inventory.update(player)
         # Обновление персонажа
         player.move()
         player.update()
@@ -86,4 +88,5 @@ def main():
 
 if __name__ == '__main__':
     world = []
+    inventory = []
     main()

@@ -105,3 +105,13 @@ class Player(Mobs):
                 self.mine(block)
             elif self.hand.type == 2:
                 self.chop(block)
+
+    def right_clicked(self, block):
+        pass
+        if block.name == 'Air':
+            player_block_x = self.x // Block.size
+            player_block_y = self.y // Block.size
+            if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
+                pass
+
+

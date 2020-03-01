@@ -65,6 +65,7 @@ class Block:
 
 # Блок Воздуха;
 
+
 class Air(Block):
     def __init__(self, x, y):
         super().__init__(0, x, y)

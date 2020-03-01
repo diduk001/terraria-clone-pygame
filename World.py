@@ -34,7 +34,7 @@ class World:
 
     def show(self):
         Sprites.blocks_sprites.draw(self.screen)
-        Sprites.mobs_sprites.draw(self.screen)
+        Sprites.player_sprite.draw(self.screen)
         Sprites.item_sprites.draw(self.screen)
 
     def update(self):

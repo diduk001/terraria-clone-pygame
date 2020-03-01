@@ -33,6 +33,7 @@ class Item:
         self.sprite = Sprites.ItemSprite(self)
 # Предмет - пустая ячейка
 
+
 class VoidItem(Item):
     def __init__(self):
         super().__init__(-1)
@@ -62,6 +63,7 @@ class PlaceableItem(Item):
 
 # Предметы, на которых можно крафтить;
 
+
 class CraftItem(PlaceableItem):
     def __init__(self, item_id):
         super().__init__(item_id)
@@ -72,6 +74,7 @@ class CraftItem(PlaceableItem):
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
+
 
 class Instrument(Item):
     def __init__(self, item_id):

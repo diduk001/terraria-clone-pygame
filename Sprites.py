@@ -71,15 +71,14 @@ class ItemSprite(MySprite):
             if not block.is_passable:
                 dirt = True
                 self.vy = 0
-                self.down_free = False
             elif not dirt and self.vy == 0:
                 self.vy = 2
-        print(block.x, block.y)
         self.rect.y += self.vy
+
 
 class MobSprite(MySprite):
     def __init__(self, mob):
-        super().__init__(mobs_sprites, mob)
+        super().__init__(player_sprite, mob)
         self.mob = mob
         up = [self.mob.x, self.mob.y + self.mob.jump_speed, self.mob.width, -self.mob.jump_speed]
         down = [self.mob.x, self.mob.y + self.mob.height, self.mob.width, -self.mob.jump_speed]
@@ -125,8 +124,11 @@ class MobSprite(MySprite):
             if not block.is_passable:
                 self.mob.vx = min(0, self.mob.vx)
                 self.mob.right = False
+
         self.rect = self.rect.move(self.mob.vx, self.mob.vy)
         self.update_coordinates()
+
+
 
     def update_coordinates(self):
         self.mob.x = self.rect.x
@@ -137,3 +139,6 @@ class MobSprite(MySprite):
         self.right.update_coordinates(self.mob.x + self.mob.width, self.mob.y)
 
 
+class PlayerSprite(MobSprite):
+    def move(self):
+        super().move()

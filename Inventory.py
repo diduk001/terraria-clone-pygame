@@ -1,6 +1,6 @@
 import pygame
 import Items
-
+import Sprites
 
 class Inventory:
     def __init__(self, qapheight, bpheight, width, x, y):
@@ -187,7 +187,6 @@ class Inventory:
                 text = font.render(str(count), 1, (100, 230, 100))
                 screen.blit(text, (x + 4, y + 2))
                 x += self.cell_size + self.frame_size
-
 
     def left_swap(self):
         x1, y1 = self.to_swap[0]
@@ -377,3 +376,18 @@ class Inventory:
         for ingredient, count in item.recipe:
             self.item_delete(ingredient.id, count)
         self.item_add(item, item.craft_count)
+
+    def update(self, player):
+        self.update_hand(player)
+        for item in pygame.sprite.spritecollide(player.sprite, Sprites.item_sprites, False):
+            self.item_add(item, 1)
+
+    def update_hand(self, player):
+        if self.chosen_cell is None:
+            player.hand = None
+        else:
+            x, y = self.chosen_cell
+            if self.content[x][y].name == "Void":
+                player.hand = None
+            else:
+                player.hand = self.content[x][y]
