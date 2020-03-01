@@ -20,7 +20,8 @@ def main():
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
     inventory.content[0][0] = [Items.DugDirt(), 2]
     inventory.content[3][2] = [Items.QuarriedStone(), 1]
-    inventory.content[0][9] = [Items.QuarriedCopperOre(), 24]
+    inventory.content[0][9] = [Items.QuarriedCopperOre(), 100]
+    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Настройка fps, цикла игры
 
@@ -37,11 +38,17 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and (event.key == 32 or event.key == 119):
                 player.jump()
+
             if event.type == pygame.KEYDOWN and event.key == 9:
                 inventory.is_open = not inventory.is_open
                 inventory.to_swap = []
+
             if event.type == pygame.MOUSEBUTTONDOWN:
-                inventory.clicked(event.pos)
+                if event.button == 1:
+                    inventory.left_clicked(event.pos)
+                if event.button == 3:
+                    inventory.right_clicked(event.pos)
+
             if event.type == pygame.QUIT:
                 running = False
 
