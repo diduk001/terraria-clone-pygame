@@ -1,5 +1,6 @@
 import pygame
 
+
 class Item:
     def __init__(self, id):
         # id итема;
@@ -15,6 +16,18 @@ class Item:
         self.color = tuple()
         self.recipe = list(tuple())
         self.max_stack = int()
+
+
+# Предмет - пустая ячейка
+
+class VoidItem(Item):
+    def __init__(self):
+        super().__init__(-1)
+
+        self.name = "Void"
+        self.color = ()
+        self.recipe = []
+        self.max_stack = 0
 
 
 # Предметы, которые можно ставить;
@@ -103,7 +116,7 @@ class QuarriedCopperOre(PlaceableItem):
         super().__init__(2)
 
         self.name = "Quarried Copper Ore"
-        self.color = (72, 45, 20)
+        self.color = (150, 60, 60)
         self.recipe = []
         self.max_stack = 128
         self.block = 4

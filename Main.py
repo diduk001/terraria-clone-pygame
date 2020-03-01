@@ -3,6 +3,7 @@ import World
 import Blocks
 import Mobs
 import Inventory
+import Items
 
 def main():
     pygame.init()
@@ -17,6 +18,9 @@ def main():
     world = World.World(screen)
     player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+    inventory.content[0][0] = [Items.DugDirt(), 2]
+    inventory.content[3][2] = [Items.QuarriedStone(), 1]
+    inventory.content[0][9] = [Items.QuarriedCopperOre(), 24]
 
     # Настройка fps, цикла игры
 
