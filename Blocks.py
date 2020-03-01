@@ -41,10 +41,18 @@ class Block:
         pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
     # Метод разрушения;
+    def destroy(self):
+        self.sprite.delete()
 
-    def destroy(self, screen):
-        pass
+    def mine(self, x):
+        self.solidity_pickaxe -= x
+        if self.solidity_pickaxe <= 0:
+            self.destroy()
 
+    def chop(self, x):
+        self.solidity_axe -= x
+        if self.solidity_axe <= 0:
+            self.destroy()
 
 # Блок Воздуха;
 

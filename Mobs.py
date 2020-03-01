@@ -38,7 +38,6 @@ class Mobs:
         self.vx = 0
         if self.jump_now:
             self.now_jump_time += 1
-            print(self.now_jump_time)
         if self.now_jump_time == self.jump_time:
             self.now_jump_time = 0
             self.jump_now = False
@@ -79,3 +78,12 @@ class Player(Mobs):
         self.speed = 2
         self.image = pygame.Surface((self.width, self.height))
         self.sprite = Sprites.MobSprite(self)
+        self.efficiency_pickaxe = 1
+        self.efficiency_axe = 1
+        self.hand = None
+
+    def mine(self, block):
+        block.mine(self.efficiency_pickaxe)
+
+    def chop(self, block):
+        block.chop(self.efficiency_axe)
