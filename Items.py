@@ -1,12 +1,12 @@
 class Item:
-    def __init__(self, id):
-        # id итема;
+    def __init__(self, item_id):
+        # item_id итема;
 
-        self.id = id
+        self.id = item_id
 
         # Имя итема
         # Его цвет
-        # Рецепт крафта (список туплов(id материала, кол-во) );
+        # Рецепт крафта (список туплов(item_id материала, кол-во) );
         # Размер стака;
 
         self.name = str()
@@ -18,10 +18,10 @@ class Item:
 # Предметы, которые можно ставить;
 
 class PlaceableItem(Item):
-    def __init__(self, id):
-        super().__init__(id)
+    def __init__(self, item_id):
+        super().__init__(item_id)
 
-        # id блока, соответствующего текстуре;
+        # item_id блока, соответствующего текстуре;
 
         self.block = int()
 
@@ -34,24 +34,24 @@ class PlaceableItem(Item):
 # Предметы, на которых можно крафтить;
 
 class CraftItem(PlaceableItem):
-    def __init__(self, id):
-        super().__init__(id)
+    def __init__(self, item_id):
+        super().__init__(item_id)
 
-        # Список предметов (id), доступных для крафта;
+        # Список предметов (item_id), доступных для крафта;
 
         self.enable_to_craft = list()
 
     # функция крафта (обмена ресурсов на продукт);
 
-    def craft(self, id):
+    def craft(self, item_id):
         pass
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
 
 class Instrument(Item):
-    def __init__(self, id):
-        super().__init__(id)
+    def __init__(self, item_id):
+        super().__init__(item_id)
 
         # Инструменты не стакаются =(
 
@@ -125,6 +125,7 @@ class Timber(PlaceableItem):
         super().__init__(4)
 
         self.name = "Timber"
+
         self.color = (150, 75, 0)
         self.recipe = []
         self.max_stack = 128
@@ -157,7 +158,7 @@ class Furnace(CraftItem):
 
 class TimberSword(Instrument):
     def __init__(self):
-        super.__init__(7)
+        super().__init__(7)
 
         self.name = "Timber Sword"
         self.color = ()

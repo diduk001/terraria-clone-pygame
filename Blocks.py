@@ -8,10 +8,10 @@ blocks_sprites = pygame.sprite.Group()
 class Block:
     size = 20
 
-    def __init__(self, id, x, y):
-        # id блока и его координаты в блоках;
+    def __init__(self, block_id, x, y):
+        # item_id блока и его координаты в блоках;
 
-        self.id = id
+        self.id = block_id
         self.x = x
         self.y = y
 
@@ -20,7 +20,7 @@ class Block:
         # Разрушаемость
         # Проходимость
         # Прочность блока добыче: киркой, топором
-        # id итема, выпадающего при разрушении
+        # item_id итема, выпадающего при разрушении
 
         self.name = str()
         self.color = tuple()
