@@ -58,6 +58,14 @@ class Inventory:
         self.furnace_is_available = False
         self.enable_to_craft = [Items.Workbench(), Items.Furnace()]
 
+        self.chosen_recipe = 1
+        self.craft_coordinates = [(0, 0) for i in range(len(self.enable_to_craft))]
+
+        for i in range(len(self.enable_to_craft)):
+            self.craft_coordinates[i] = (self.x + self.width * (self.frame_size + self.cell_size) + 3 * self.frame_size,
+                                         self.y + (self.qapheight + i) * (self.frame_size + self.cell_size)
+                                         + 3 * self.frame_size)
+
     def show(self, screen):
 
         # Отрисовка панели быстрого доступа
@@ -129,6 +137,42 @@ class Inventory:
         for i, j in self.to_swap:
             x, y = self.coordinates[i][j]
             pygame.draw.rect(screen, (200, 100, 100), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
+
+        # Отрисовка крафтов
+        if self.is_open:
+            height = len(self.enable_to_craft) * (self. frame_size + self.cell_size) + self.frame_size
+            width = 2 * self.frame_size + self.cell_size
+            x = self.x + self.width * (self.frame_size + self.cell_size) + 2 * self.frame_size
+            y = self.y + self.qapheight * (self.frame_size + self.cell_size) + 2 * self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, width, height), 0)
+
+            for i in range(len(self.enable_to_craft)):
+                x, y = self.craft_coordinates[i]
+                pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
+                item = self.enable_to_craft[i]
+                pygame.draw.rect(screen, item.color, (x + 2, y + 2, 28, 28), 0)
+                font = pygame.font.Font("MainFont.fon", 16)
+                text = font.render(str(item.craft_count), 1, (100, 230, 100))
+                screen.blit(text, (x + 4, y + 2))
+
+            x, y = self.craft_coordinates[self.chosen_recipe]
+            item = self.enable_to_craft[self.chosen_recipe]
+            pygame.draw.rect(screen, (100, 200, 200), (x, y, self.cell_size - 1, self.cell_size - 1), 2)
+            x += self.cell_size + self.frame_size
+            y -= self.frame_size
+            width = len(item.recipe) * (self.frame_size + self.cell_size)
+            height = self.cell_size + 2 * self.frame_size
+            pygame.draw.rect(screen, (149, 149, 149), (x, y, width, height), 0)
+            y += self.frame_size
+            for i in range(len(item.recipe)):
+                pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
+                ingredient, count = item.recipe[i]
+                pygame.draw.rect(screen, ingredient.color, (x + 2, y + 2, 28, 28), 0)
+                font = pygame.font.Font("MainFont.fon", 16)
+                text = font.render(str(count), 1, (100, 230, 100))
+                screen.blit(text, (x + 4, y + 2))
+                x += self.cell_size + self.frame_size
+
 
     def left_swap(self):
         x1, y1 = self.to_swap[0]
@@ -256,6 +300,14 @@ class Inventory:
             self.chosen_cell = (x, 0)
         else:
             self.chosen_cell = (x, y + 1)
+
+    def up_chosen_recipe(self):
+        if self.chosen_recipe != 0:
+            self.chosen_recipe -= 1
+
+    def down_chosen_recipe(self):
+        if self.chosen_recipe != len(self.enable_to_craft) - 1:
+            self.chosen_recipe += 1
 
     def item_count(self, item_id):
         count = 0

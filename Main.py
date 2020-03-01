@@ -50,12 +50,12 @@ def main():
                     inventory.right_clicked(event.pos)
                 if event.button == 4:
                     if inventory.is_open:
-                        pass
+                        inventory.up_chosen_recipe()
                     else:
                         inventory.up_chosen_cell()
                 if event.button == 5:
                     if inventory.is_open:
-                        pass
+                        inventory.down_chosen_recipe()
                     else:
                         inventory.down_chosen_cell()
 

@@ -15,6 +15,7 @@ class Item:
         self.name = str()
         self.color = tuple()
         self.recipe = list(tuple())
+        self.craft_count = int()
         self.max_stack = int()
 
 
@@ -27,6 +28,7 @@ class VoidItem(Item):
         self.name = "Void"
         self.color = ()
         self.recipe = []
+        self.craft_count = 0
         self.max_stack = 0
 
 
@@ -53,13 +55,8 @@ class CraftItem(PlaceableItem):
         super().__init__(id)
 
         # Список предметов (id), доступных для крафта;
-
+        self.craft_count = 1
         self.enable_to_craft = list()
-
-    # функция крафта (обмена ресурсов на продукт);
-
-    def craft(self, id):
-        pass
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
@@ -69,7 +66,7 @@ class Instrument(Item):
         super().__init__(id)
 
         # Инструменты не стакаются =(
-
+        self.craft_count = 1
         self.max_stack = 1
 
         # Тип инструмента (меч, кирка, топор); Наносимый урон (есть у всех инструментов); Эффективность инструмента;
