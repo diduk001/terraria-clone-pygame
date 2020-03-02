@@ -1,4 +1,5 @@
 import pygame
+import Sprites
 
 
 class Item:
@@ -6,7 +7,12 @@ class Item:
         # id итема;
 
         self.id = id
-
+        self.size = 1
+        self.width = 28
+        self.height = 28
+        self.image = pygame.Surface((self.width, self.height))
+        self.x = int()
+        self.y = int()
         # Имя итема
         # Его цвет
         # Рецепт крафта (список туплов(id материала, кол-во) );
@@ -17,8 +23,15 @@ class Item:
         self.recipe = list(tuple())
         self.craft_count = int()
         self.max_stack = int()
+        self.sprite = Sprites.ItemSprite
 
+    def update_coordinates(self, x, y):
+        self.x = x
+        self.y = y
 
+    def drop(self, x, y):
+        self.update_coordinates(x, y)
+        self.sprite = Sprites.ItemSprite(self)
 # Предмет - пустая ячейка
 
 class VoidItem(Item):
@@ -69,7 +82,9 @@ class Instrument(Item):
         self.craft_count = 1
         self.max_stack = 1
 
-        # Тип инструмента (меч, кирка, топор); Наносимый урон (есть у всех инструментов); Эффективность инструмента;
+        # Тип инструмента (меч, кирка, топор);
+        # Наносимый урон (есть у всех инструментов);
+        # Эффективность инструмента;
 
         self.type = int()
         self.damage = int()

@@ -1,6 +1,7 @@
 import pygame
-from Blocks import Block
+
 import Sprites
+from Blocks import Block
 
 
 class Mobs:
@@ -16,12 +17,16 @@ class Mobs:
         self.hp = int()
         self.jump_speed = int()
         self.jump_time = int()
-        self.jump_now = False
+        self.jump_now = bool()
         self.now_jump_time = 0
         self.attack = int()
         self.speed = int()
         self.image = pygame.Surface((self.width, self.height))
         self.sprite = Sprites.MobSprite(self)
+        self.right_free = bool()
+        self.left_free = bool()
+        self.down_free = bool()
+        self.up_free = bool()
 
     def move(self):
         self.sprite.move()
@@ -51,6 +56,8 @@ class Mobs:
             self.jump_now = True
             self.vy = self.jump_speed
 
+    # Метод нанесения урона Мобу
+
     def damage(self, x):
         self.hp -= x
 
@@ -58,6 +65,11 @@ class Mobs:
         if self.hp > 0:
             return True
         return False
+
+    # Метод, вызываемый при ударении Моба
+
+    def punch(self, mob):
+        mob.damage(self.attack)
 
 
 class Player(Mobs):
@@ -72,3 +84,37 @@ class Player(Mobs):
         self.speed = 2
         self.image = pygame.Surface((self.width, self.height))
         self.sprite = Sprites.MobSprite(self)
+        self.efficiency_pickaxe = 1
+        self.efficiency_axe = 1
+        self.hand = None
+        self.range = 4
+
+    def mine(self, block):
+        if block.is_breakable:
+            block.mine(self.efficiency_pickaxe)
+
+    def chop(self, block):
+        if block.is_breakable:
+            block.chop(self.efficiency_axe)
+
+    def left_clicked(self, block):
+        player_block_x = self.x // Block.size
+        player_block_y = self.y // Block.size
+        if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
+            if self.hand is None:
+                if block.chop_or_mine():
+                    self.chop(block)
+                else:
+                    self.mine(block)
+            elif self.hand.type == 1:
+                self.mine(block)
+            elif self.hand.type == 2:
+                self.chop(block)
+
+    def right_clicked(self, block):
+        pass
+        if block.name == 'Air':
+            player_block_x = self.x // Block.size
+            player_block_y = self.y // Block.size
+            if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
+                pass

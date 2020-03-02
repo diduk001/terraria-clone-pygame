@@ -1,12 +1,20 @@
 import pygame
-import World
 import Blocks
 import Mobs
 import Inventory
 import Items
+import World
+
+global world
+
+
+def block_coordinates(coordinates):
+    return coordinates[0] // Blocks.Block.size, coordinates[1] // Blocks.Block.size
+
 
 def main():
     pygame.init()
+
     # Расширение игры
 
     height, width = 1000, 600
@@ -15,7 +23,19 @@ def main():
     # Создание мира и игрока в центре мира
 
     world = World.World(screen)
-    player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
+
+    # Выбор места для спавна игрока
+
+    spawn_x_coord = world.width // 2 * Blocks.Block.size + 1
+    spawn_y_coord = int()
+    for spawn_y in range(1, world.height * Blocks.Block.size, Blocks.Block.size):
+        if isinstance(world.get_block(spawn_x_coord, spawn_y + 2 * Blocks.Block.size), Blocks.Dirt):
+            spawn_y_coord = spawn_y
+            break
+
+    # Создание игрока, инвентаря
+
+    player = Player.Player(spawn_x_coord, spawn_y_coord - 1)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
     inventory.content[0][0] = [Items.DugDirt(), 2]
     inventory.content[3][2] = [Items.Timber(), 100]
@@ -26,14 +46,17 @@ def main():
 
     fps = 120
     clock = pygame.time.Clock()
-
     running = True
+
     while running:
         # Обработка событий
         if pygame.key.get_pressed()[100]:
             player.move_right()
         if pygame.key.get_pressed()[97]:
             player.move_left()
+        if pygame.mouse.get_pressed()[0]:
+            x, y = block_coordinates(pygame.mouse.get_pos())
+            player.left_clicked(world.world[x][y])
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and (event.key == 32 or event.key == 119):
                 player.jump()
@@ -47,6 +70,8 @@ def main():
                     inventory.left_clicked(event.pos)
                 if event.button == 3:
                     inventory.right_clicked(event.pos)
+                    x, y = block_coordinates(pygame.mouse.get_pos())
+                    player.right_clicked(world.world[x][y])
                 if event.button == 4:
                     if inventory.is_open:
                         inventory.up_chosen_recipe()
@@ -62,15 +87,15 @@ def main():
                 running = False
 
         world.show()
+        world.update()
         inventory.show(screen)
         pygame.display.flip()
-
+        inventory.update(player)
         # Обновление персонажа
         player.move()
         player.update()
 
         clock.tick(fps)
-
 
 if __name__ == '__main__':
     main()

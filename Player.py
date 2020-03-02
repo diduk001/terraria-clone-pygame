@@ -1,9 +1,7 @@
 import pygame
-from Blocks import Block
+
 import Sprites
-import Mobs
-import Main
-from pygame.rect import Rect
+from Blocks import Block
 
 
 class Player:
@@ -73,6 +71,4 @@ class Player:
         self.hp -= x
 
     def is_live(self):
-        if self.hp > 0:
-            return True
-        return False
+        return self.hp < 0

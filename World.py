@@ -1,14 +1,13 @@
-import pygame
-import Sprites
 import Blocks
+import Generation
+import Sprites
 
 
 class World:
-
-    # Высота и Ширина мира (в блоках)
+    # Размер блока, Высота и Ширина мира (в блоках)
     size = Blocks.Block.size
-    width = 30
-    height = 26
+    width = 40
+    height = 18
 
     def __init__(self, screen):
         self.world = list()
@@ -18,24 +17,30 @@ class World:
     # Генерация мира
 
     def gen(self):
-        # Мир заполняется блоками воздуха
-
-        self.world = [[Blocks.Air(x, y) for y in range(self.height)] for x in range(self.width)]
-
-        # Часть мира заполняется землёй
-        for y in range(self.height // 2, self.height):
-            for x in range(self.width):
-                self.world[x][y].sprite.delete()
-                if (x + y) % 2 == 0:
-                    self.world[x][y] = Blocks.Dirt(x, y)
-                else:
-                    self.world[x][y] = Blocks.Stone(x, y)
-        self.world[6][10] = Blocks.Dirt(6, 10)
-        self.world[11][11] = Blocks.Dirt(11, 11)
-        self.world[25][7] = Blocks.Dirt(25, 7)
+        # Генерируем мир
+        self.world = Generation.generate(self.width, self.height)
 
     # Функция отрисовки
 
     def show(self):
         Sprites.blocks_sprites.draw(self.screen)
-        Sprites.mobs_sprites.draw(self.screen)
+        Sprites.player_sprite.draw(self.screen)
+        Sprites.item_sprites.draw(self.screen)
+
+    def update(self):
+        for x, y in Blocks.deleted:
+            self.world[x][y] = Blocks.Air(x, y)
+        Blocks.deleted = []
+        for sprite in Sprites.item_sprites:
+            sprite.move()
+
+    def get_block_coords(self, x, y):
+        return x // Blocks.Block.size, y // Blocks.Block.size
+
+    def get_block(self, x, y):
+        x_block, y_block = self.get_block_coords(x, y)
+        return self.world[x_block][y_block]
+
+    def is_block(self, x, y, block):
+        x_block, y_block = self.get_block_coords(x, y)
+        return self.world[x_block][y_block] == block(x, y)
