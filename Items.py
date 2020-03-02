@@ -1,60 +1,87 @@
+import pygame
+import Sprites
+
+
 class Item:
     def __init__(self, item_id):
         # item_id итема;
 
         self.id = item_id
-
+        self.size = 1
+        self.width = 28
+        self.height = 28
+        self.image = pygame.Surface((self.width, self.height))
+        self.x = int()
+        self.y = int()
         # Имя итема
         # Его цвет
-        # Рецепт крафта (список туплов(item_id материала, кол-во) );
+        # Рецепт крафта (список туплов(id материала, кол-во) );
         # Размер стака;
 
         self.name = str()
         self.color = tuple()
         self.recipe = list(tuple())
+        self.craft_count = int()
         self.max_stack = int()
+
+    def update_coordinates(self, x, y):
+        self.x = x
+        self.y = y
+
+    def drop(self, x, y):
+        self.update_coordinates(x, y)
+        self.sprite = Sprites.ItemSprite(self)
+# Предмет - пустая ячейка
+
+
+class VoidItem(Item):
+    def __init__(self):
+        super().__init__(-1)
+
+        self.name = "Void"
+        self.color = ()
+        self.recipe = []
+        self.craft_count = 0
+        self.max_stack = 0
 
 
 # Предметы, которые можно ставить;
+
 
 class PlaceableItem(Item):
     def __init__(self, item_id):
         super().__init__(item_id)
 
-        # item_id блока, соответствующего текстуре;
+        # block_id блока, соответствующего текстуре;
 
         self.block = int()
 
-    # функция размещения;
+    # Метод размещения;
 
     def place(self, x, y):
         pass
 
-
 # Предметы, на которых можно крафтить;
+
 
 class CraftItem(PlaceableItem):
     def __init__(self, item_id):
         super().__init__(item_id)
 
-        # Список предметов (item_id), доступных для крафта;
-
+        # Список предметов (id), доступных для крафта;
+        self.craft_count = 1
         self.enable_to_craft = list()
-
-    # функция крафта (обмена ресурсов на продукт);
-
-    def craft(self, item_id):
-        pass
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
+
 
 class Instrument(Item):
     def __init__(self, item_id):
         super().__init__(item_id)
 
         # Инструменты не стакаются =(
-
+        self.craft_count = 1
         self.max_stack = 1
 
         # Тип инструмента (меч, кирка, топор);
@@ -103,7 +130,7 @@ class QuarriedCopperOre(PlaceableItem):
         super().__init__(2)
 
         self.name = "Quarried Copper Ore"
-        self.color = (72, 45, 20)
+        self.color = (150, 60, 60)
         self.recipe = []
         self.max_stack = 128
         self.block = 4
@@ -125,7 +152,6 @@ class Timber(PlaceableItem):
         super().__init__(4)
 
         self.name = "Timber"
-
         self.color = (150, 75, 0)
         self.recipe = []
         self.max_stack = 128
@@ -138,7 +164,7 @@ class Workbench(CraftItem):
 
         self.name = "Workbench"
         self.color = (252, 211, 59)
-        self.recipe = []
+        self.recipe = [(Timber(), 10)]
         self.max_stack = 16
         self.block = 9
         self.enable_to_craft = []
@@ -150,7 +176,7 @@ class Furnace(CraftItem):
 
         self.name = "Furnace"
         self.color = (112, 128, 144)
-        self.recipe = []
+        self.recipe = [(QuarriedStone(), 20), (Timber(), 10)]
         self.max_stack = 16
         self.block = 10
         self.enable_to_craft = []

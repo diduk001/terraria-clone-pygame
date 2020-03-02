@@ -1,12 +1,15 @@
+import pygame
 import Sprites
 import Blocks
 import Generation
 
+
+
 class World:
-    # Высота и Ширина мира (в блоках)
+    # Размер блока, Высота и Ширина мира (в блоках)
     size = Blocks.Block.size
-    width = 50
-    height = 30
+    width = 30
+    height = 26
 
     def __init__(self, screen):
         self.world = list()
@@ -32,6 +35,15 @@ class World:
 
     def show(self):
         Sprites.blocks_sprites.draw(self.screen)
+        Sprites.player_sprite.draw(self.screen)
+        Sprites.item_sprites.draw(self.screen)
+
+    def update(self):
+        for x, y in Blocks.deleted:
+            self.world[x][y] = Blocks.Air(x, y)
+        Blocks.deleted = []
+        for sprite in Sprites.item_sprites:
+            sprite.move()
 
     def get_block_coords(self, x, y):
         return x // Blocks.Block.size, y // Blocks.Block.size
