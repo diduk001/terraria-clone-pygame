@@ -118,8 +118,7 @@ class Inventory:
             for i in range(self.qapheight, self.bpheight + self.qapheight):
                 for j in range(self.width):
                     x, y = self.coordinates[i][j]
-                    pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size),
-                                     0)
+                    pygame.draw.rect(screen, (174, 174, 174), (x, y, self.cell_size, self.cell_size), 0)
                     item, count = self.content[i][j]
                     if item.id != -1:
                         x, y = self.coordinates[i][j]
@@ -385,18 +384,3 @@ class Inventory:
         for ingredient, count in item.recipe:
             self.item_delete(ingredient.id, count)
         self.item_add(item, item.craft_count)
-
-    def update(self, player):
-        self.update_hand(player)
-        for item in pygame.sprite.spritecollide(player.sprite, Sprites.item_sprites, False):
-            self.item_add(item, 1)
-
-    def update_hand(self, player):
-        if self.chosen_cell is None:
-            player.hand = None
-        else:
-            x, y = self.chosen_cell
-            if self.content[x][y][0].name == "Void":
-                player.hand = None
-            else:
-                player.hand = self.content[x][y]

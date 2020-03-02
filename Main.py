@@ -35,7 +35,7 @@ def main():
 
     # Создание игрока, инвентаря
 
-    player = Player.Player(spawn_x_coord, spawn_y_coord - 1)
+    player = Mobs.Player(spawn_x_coord, spawn_y_coord - 1)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
     inventory.content[0][0] = [Items.DugDirt(), 2]
     inventory.content[3][2] = [Items.Timber(), 100]
@@ -90,7 +90,6 @@ def main():
         world.update()
         inventory.show(screen)
         pygame.display.flip()
-        inventory.update(player)
         # Обновление персонажа
         player.move()
         player.update()
