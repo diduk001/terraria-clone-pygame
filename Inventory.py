@@ -194,10 +194,8 @@ class Inventory:
         x2, y2 = self.to_swap[1]
         if (x1, y1) == (-1, -1):
             self.content[x2][y2] = [Items.VoidItem(), 0]
-            print("deleted")
         elif (x2, y2) == (-1, -1):
             self.content[x1][y1] = [Items.VoidItem(), 0]
-            print("deleted")
         elif self.content[x1][y1][0].id == self.content[x2][y2][0].id:
             if self.content[x1][y1][1] <= self.content[x2][y2][0].max_stack - self.content[x2][y2][1]:
                 self.content[x2][y2][1] += self.content[x1][y1][1]
@@ -208,37 +206,30 @@ class Inventory:
 
         else:
             self.content[x1][y1], self.content[x2][y2] = self.content[x2][y2], self.content[x1][y1]
-            print("swapped")
         self.to_swap = []
 
     def right_swap(self):
         x1, y1 = self.to_swap[0]
         x2, y2 = self.to_swap[1]
         if self.content[x1][y1][0].id == Items.VoidItem().id:
-            print(1)
             self.last_click_is_right = False
             self.to_swap = []
         elif (x2, y2) == (-1, -1):
-            print(2)
             self.content[x1][y1][1] -= 1
             self.to_swap.pop()
         elif self.content[x2][y2][0].id == Items.VoidItem().id:
-            print(3)
             self.content[x2][y2] = [self.content[x1][y1][0], 1]
             self.content[x1][y1][1] -= 1
             self.to_swap.pop()
         elif self.content[x1][y1][0].id != self.content[x2][y2][0].id:
-            print(4)
             self.last_click_is_right = False
             self.left_swap()
         else:
             if self.content[x2][y2][1] < self.content[x2][y2][0].max_stack:
-                print(5)
                 self.content[x2][y2][1] += 1
                 self.content[x1][y1][1] -= 1
                 self.to_swap.pop()
             else:
-                print(6)
                 self.to_swap = []
         if self.content[x1][y1][1] == 0:
             self.content[x1][y1] = [Items.VoidItem(), 0]
@@ -305,7 +296,6 @@ class Inventory:
             self.chosen_cell = (0, 0)
             return
         x, y = self.chosen_cell
-        print(x, y)
         if y == 0:
             self.chosen_cell = (x, self.width - 1)
         else:
@@ -316,7 +306,6 @@ class Inventory:
             self.chosen_cell = (0, 9)
             return
         x, y = self.chosen_cell
-        print(x, y)
         if y == self.width - 1:
             self.chosen_cell = (x, 0)
         else:
