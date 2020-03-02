@@ -1,5 +1,4 @@
 import pygame
-
 import Blocks
 import Inventory
 import Items
@@ -15,14 +14,20 @@ def block_coordinates(coordinates):
 
 def main():
     pygame.init()
+
     # Расширение игры
 
     height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
 
-    # Создание мира и игрока
+    # Создание мира и игрока в центре мира
 
     world = World.World(screen)
+    inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+    inventory.content[0][0] = [Items.DugDirt(), 2]
+    inventory.content[3][2] = [Items.Timber(), 100]
+    inventory.content[0][9] = [Items.QuarriedStone(), 100]
+    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Выбор места для спавна игрока
 
@@ -37,12 +42,13 @@ def main():
 
     player = Mobs.Player(spawn_x_coord, spawn_y_coord - 1)
 
+
     # Настройка fps, цикла игры
 
     fps = 120
     clock = pygame.time.Clock()
-
     running = True
+
     while running:
         # Обработка событий
         if pygame.key.get_pressed()[100]:
@@ -91,8 +97,5 @@ def main():
 
         clock.tick(fps)
 
-
 if __name__ == '__main__':
-    inventory = []
-    world = World.World
     main()
