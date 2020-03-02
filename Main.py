@@ -1,12 +1,15 @@
 import pygame
 
 import Blocks
+import Camera
 import Inventory
 import Items
 import Player
 import World
 
 global world
+
+height, width = 1000, 600
 
 
 def block_coordinates(coordinates):
@@ -19,6 +22,7 @@ def main():
 
     height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
+    camera = Camera.Camera()
 
     # Создание мира и игрока
 
@@ -91,16 +95,21 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+        camera.show()
+
         world.show()
         world.update()
+
         player.show(screen)
+
         inventory.show(screen)
         pygame.display.flip()
         inventory.update(player)
         # Обновление персонажа
         player.move()
         player.update()
-
+        # Обновление камеры
+        camera.update(player.sprite)
         clock.tick(fps)
 
 

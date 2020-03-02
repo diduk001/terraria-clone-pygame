@@ -14,7 +14,6 @@ class Player:
         self.height = 2 * Block.size
         self.vx = 0
         self.vy = 0
-        self.sprite = bool()
         self.hp = int()
         self.jump_speed = -8
         self.jump_time = 16

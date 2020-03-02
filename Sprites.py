@@ -2,6 +2,7 @@ import os.path
 
 import pygame
 
+# Функция для загрузки изображения
 
 def load_image(name, color_key=None):
     fullname = os.path.join('data', name)
@@ -15,6 +16,14 @@ def load_image(name, color_key=None):
     return image
 
 
+# all_sprites       - группа всех спрайтов
+# blocks_sprites    - группа спрайтов блоков
+# mobs_sprites      - группа спрайтов мобов
+# player_sprite     - группа со спрайтом игрока (?)
+# border_sprites    - группа со спрайтами границ мира (?)
+# item_sprites      - группа со спрайтами вещей
+
+all_sprites = pygame.sprite.Group()
 blocks_sprites = pygame.sprite.Group()
 mobs_sprites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
@@ -30,6 +39,7 @@ class MySprite(pygame.sprite.Sprite):
         self.rect.x = object.x * object.size
         self.rect.y = object.y * object.size
         self.group = group
+        self.add(all_sprites)
 
     def update_image(self, new_image):
         self.image = new_image
