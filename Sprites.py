@@ -1,5 +1,6 @@
-import pygame
 import os.path
+
+import pygame
 
 
 def load_image(name, color_key=None):
@@ -14,6 +15,7 @@ def load_image(name, color_key=None):
     return image
 
 
+all_sprites = pygame.sprite.Group()
 blocks_sprites = pygame.sprite.Group()
 mobs_sprites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
@@ -27,6 +29,7 @@ class MySprite(pygame.sprite.Sprite):
         self.rect.x = object.x * object.size
         self.rect.y = object.y * object.size
         self.group = group
+        all_sprites.add(self)
 
     def update_image(self, new_image):
         self.image = new_image
