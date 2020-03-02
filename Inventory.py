@@ -397,17 +397,4 @@ class Inventory:
             self.item_delete(ingredient.id, count)
         self.item_add(item, item.craft_count)
 
-    def update(self, player):
-        self.update_hand(player)
-        for item in pygame.sprite.spritecollide(player.sprite, Sprites.item_sprites, False):
-            self.item_add(item, 1)
 
-    def update_hand(self, player):
-        if self.chosen_cell is None:
-            player.hand = None
-        else:
-            x, y = self.chosen_cell
-            if self.content[x][y][0].name == "Void":
-                player.hand = None
-            else:
-                player.hand = self.content[x][y]

@@ -1,12 +1,19 @@
 import pygame
-
+import Inventory
 import Sprites
+import Items
 from Blocks import Block
 
 
 class Player:
     def __init__(self, x, y):
         # координаты по x, y
+        self.inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+
+        self.inventory.content[0][0] = [Items.DugDirt(), 2]
+        self.inventory.content[3][2] = [Items.Timber(), 100]
+        self.inventory.content[0][9] = [Items.QuarriedStone(), 100]
+        self.inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
         self.x = x
         self.y = y
         self.size = 1
@@ -72,3 +79,16 @@ class Player:
 
     def is_live(self):
         return self.hp < 0
+
+    def update(self, player):
+        self.update_hand(player)
+
+    def update_hand(self, player):
+        if self.inventory.chosen_cell is None:
+            player.hand = None
+        else:
+            x, y = self.inventory.chosen_cell
+            if self.inventory.content[x][y][0].name == "Void":
+                player.hand = None
+            else:
+                player.hand = self.inventory.content[x][y]
