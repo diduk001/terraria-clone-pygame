@@ -1,7 +1,7 @@
 import pygame
-from Blocks import Block
-import Main
+
 import Sprites
+from Blocks import Block
 
 
 class Mobs:
@@ -17,12 +17,16 @@ class Mobs:
         self.hp = int()
         self.jump_speed = int()
         self.jump_time = int()
-        self.jump_now = False
+        self.jump_now = bool()
         self.now_jump_time = 0
         self.attack = int()
         self.speed = int()
         self.image = pygame.Surface((self.width, self.height))
         self.sprite = Sprites.MobSprite(self)
+        self.right_free = bool()
+        self.left_free = bool()
+        self.down_free = bool()
+        self.up_free = bool()
 
     def move(self):
         self.sprite.move()
@@ -61,6 +65,7 @@ class Mobs:
         if self.hp > 0:
             return True
         return False
+
     # Метод, вызываемый при ударении Моба
 
     def punch(self, mob):
@@ -113,5 +118,3 @@ class Player(Mobs):
             player_block_y = self.y // Block.size
             if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
                 pass
-
-

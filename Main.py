@@ -1,11 +1,10 @@
 import pygame
 
-import World
 import Blocks
-import Mobs
 import Inventory
 import Items
 import Player
+import World
 
 global world
 
@@ -24,13 +23,11 @@ def main():
     # Создание мира и игрока
 
     world = World.World(screen)
-    player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
     inventory = Inventory.Inventory(1, 3, 10, 10, 10)
     inventory.content[0][0] = [Items.DugDirt(), 2]
     inventory.content[3][2] = [Items.Timber(), 100]
     inventory.content[0][9] = [Items.QuarriedStone(), 100]
     inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
-
 
     # Выбор места для спавна игрока
 
@@ -44,7 +41,11 @@ def main():
     # Создание игрока, инвентаря
 
     player = Player.Player(spawn_x_coord, spawn_y_coord - 1)
-    inventory = Inventory.Window()
+    inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+    inventory.content[0][0] = [Items.DugDirt(), 2]
+    inventory.content[3][2] = [Items.Timber(), 100]
+    inventory.content[0][9] = [Items.QuarriedStone(), 100]
+    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Настройка fps, цикла игры
 

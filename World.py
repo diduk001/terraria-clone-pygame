@@ -1,15 +1,13 @@
-import pygame
-import Sprites
 import Blocks
 import Generation
-
+import Sprites
 
 
 class World:
     # Размер блока, Высота и Ширина мира (в блоках)
     size = Blocks.Block.size
-    width = 30
-    height = 26
+    width = 40
+    height = 18
 
     def __init__(self, screen):
         self.world = list()
@@ -19,17 +17,8 @@ class World:
     # Генерация мира
 
     def gen(self):
-        # Мир заполняется блоками воздуха
-
-        # self.world = [[Blocks.Air(x, y) for y in range(self.height)] for x in range(self.width)]
-        # Часть мира заполняется землёй
-        # for y in range(self.height // 2, self.height):
-        #     for x in range(self.width):
-        #         self.world[x][y] = Blocks.Dirt(x, y)
+        # Генерируем мир
         self.world = Generation.generate(self.width, self.height)
-        # self.world[31][14] = Blocks.Dirt(31, 14)
-        # self.world[11][14] = Blocks.Dirt(11, 14)
-        # self.world[25][11] = Blocks.Dirt(25, 11)
 
     # Функция отрисовки
 

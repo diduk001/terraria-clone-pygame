@@ -1,10 +1,12 @@
 import pygame
-import Sprites
-import Items
 from pygame import Rect
+
+import Items
+import Sprites
 
 blocks_sprites = pygame.sprite.Group()
 deleted = []
+
 
 class Block:
     size = 32
@@ -41,7 +43,8 @@ class Block:
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
+        pygame.draw.rect(screen, self.color,
+                         Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
     # Метод разрушения;
     def destroy(self, delete=True):

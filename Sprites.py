@@ -1,5 +1,6 @@
-import pygame
 import os.path
+
+import pygame
 
 
 def load_image(name, color_key=None):
@@ -128,8 +129,6 @@ class MobSprite(MySprite):
         self.rect = self.rect.move(self.mob.vx, self.mob.vy)
         self.update_coordinates()
 
-
-
     def update_coordinates(self):
         self.mob.x = self.rect.x
         self.mob.y = self.rect.y
@@ -139,6 +138,6 @@ class MobSprite(MySprite):
         self.right.update_coordinates(self.mob.x + self.mob.width, self.mob.y)
 
 
-class PlayerSprite(MobSprite):
+class PlayerSprites(MobSprite):
     def move(self):
         super().move()

@@ -23,6 +23,7 @@ class Item:
         self.recipe = list(tuple())
         self.craft_count = int()
         self.max_stack = int()
+        self.sprite = Sprites.ItemSprite
 
     def update_coordinates(self, x, y):
         self.x = x
