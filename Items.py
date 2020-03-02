@@ -1,30 +1,48 @@
+import pygame
+
+
 class Item:
-    def __init__(self, item_id):
-        # item_id итема;
+    def __init__(self, id):
+        # id итема;
 
-        self.item_id = item_id
+        self.id = id
 
-        # Имя итема; его цвет;
-        # Рецепт крафта (список кортежей (block_id материала, кол-во) );
+        # Имя итема
+        # Его цвет
+        # Рецепт крафта (список туплов(id материала, кол-во) );
         # Размер стака;
 
         self.name = str()
         self.color = tuple()
         self.recipe = list(tuple())
+        self.craft_count = int()
         self.max_stack = int()
+
+
+# Предмет - пустая ячейка
+
+class VoidItem(Item):
+    def __init__(self):
+        super().__init__(-1)
+
+        self.name = "Void"
+        self.color = ()
+        self.recipe = []
+        self.craft_count = 0
+        self.max_stack = 0
 
 
 # Предметы, которые можно ставить;
 
 class PlaceableItem(Item):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # block_id блока, соответствующего текстуре;
+        # id блока, соответствующего текстуре;
 
         self.block = int()
 
-    # Метод размещения;
+    # функция размещения;
 
     def place(self, x, y):
         pass
@@ -33,32 +51,25 @@ class PlaceableItem(Item):
 # Предметы, на которых можно крафтить;
 
 class CraftItem(PlaceableItem):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # Список предметов (block_id), доступных для крафта;
-
+        # Список предметов (id), доступных для крафта;
+        self.craft_count = 1
         self.enable_to_craft = list()
-
-    # Метод крафта (обмена ресурсов на продукт);
-
-    def craft(self, id):
-        pass
 
 
 # Пердметы - инструменты (мечи, кирки, топоры);
 
 class Instrument(Item):
-    def __init__(self, item_id):
-        super().__init__(item_id)
+    def __init__(self, id):
+        super().__init__(id)
 
-        # Инструменты не стакаются
-
+        # Инструменты не стакаются =(
+        self.craft_count = 1
         self.max_stack = 1
 
-        # Тип инструмента (меч, кирка, топор);
-        # Наносимый урон (есть у всех инструментов);
-        # Эффективность инструмента;
+        # Тип инструмента (меч, кирка, топор); Наносимый урон (есть у всех инструментов); Эффективность инструмента;
 
         self.type = int()
         self.damage = int()
@@ -102,7 +113,7 @@ class QuarriedCopperOre(PlaceableItem):
         super().__init__(2)
 
         self.name = "Quarried Copper Ore"
-        self.color = (72, 45, 20)
+        self.color = (150, 60, 60)
         self.recipe = []
         self.max_stack = 128
         self.block = 4
@@ -119,9 +130,31 @@ class QuarriedIronOre(PlaceableItem):
         self.block = 5
 
 
-class Timber(PlaceableItem):
+class Iron(Item):
     def __init__(self):
         super().__init__(4)
+
+        self.name = "Iron" # Утюг
+        self.color = (203, 205, 205)
+        self.recipe = [(QuarriedIronOre, 4)]
+        self.craft_count = 2
+        self.max_stack = 128
+
+
+class Copper(Item):
+    def __init__(self):
+        super().__init__(5)
+
+        self.name = "Copper"
+        self.color = (150, 60, 60)
+        self.recipe = [(QuarriedCopperOre, 4)]
+        self.craft_count = 2
+        self.max_stack = 128
+
+
+class Timber(PlaceableItem):
+    def __init__(self):
+        super().__init__(6)
 
         self.name = "Timber"
         self.color = (150, 75, 0)
@@ -132,11 +165,11 @@ class Timber(PlaceableItem):
 
 class Workbench(CraftItem):
     def __init__(self):
-        super().__init__(5)
+        super().__init__(7)
 
         self.name = "Workbench"
         self.color = (252, 211, 59)
-        self.recipe = []
+        self.recipe = [(Timber(), 10)]
         self.max_stack = 16
         self.block = 9
         self.enable_to_craft = []
@@ -144,11 +177,11 @@ class Workbench(CraftItem):
 
 class Furnace(CraftItem):
     def __init__(self):
-        super().__init__(6)
+        super().__init__(8)
 
         self.name = "Furnace"
         self.color = (112, 128, 144)
-        self.recipe = []
+        self.recipe = [(QuarriedStone(), 20), (Timber(), 10)]
         self.max_stack = 16
         self.block = 10
         self.enable_to_craft = []
@@ -156,7 +189,7 @@ class Furnace(CraftItem):
 
 class TimberSword(Instrument):
     def __init__(self):
-        super().__init__(7)
+        super().__init__(9)
 
         self.name = "Timber Sword"
         self.color = ()
@@ -168,7 +201,7 @@ class TimberSword(Instrument):
 
 class TimberPickaxe(Instrument):
     def __init__(self):
-        super().__init__(8)
+        super().__init__(10)
 
         self.name = "Timber Pickaxe"
         self.color = ()
@@ -180,7 +213,7 @@ class TimberPickaxe(Instrument):
 
 class TimberAxe(Instrument):
     def __init__(self):
-        super().__init__(9)
+        super().__init__(11)
 
         self.name = "Timber Axe"
         self.color = ()
@@ -188,3 +221,111 @@ class TimberAxe(Instrument):
         self.type = 2
         self.damage = 6
         self.efficiency = 40
+
+
+class StoneSword(Instrument):
+    def __init__(self):
+        super().__init__(12)
+
+        self.name = "Stone Sword"
+        self.color = ()
+        self.recipe = []
+        self.type = 0
+        self.damage = 15
+        self.efficiency = 0
+
+
+class StonePickaxe(Instrument):
+    def __init__(self):
+        super().__init__(13)
+
+        self.name = "Stone Pickaxe"
+        self.color = ()
+        self.recipe = []
+        self.type = 1
+        self.damage = 5
+        self.efficiency = 50
+
+
+class StoneAxe(Instrument):
+    def __init__(self):
+        super().__init__(14)
+
+        self.name = "Stone Axe"
+        self.color = ()
+        self.recipe = []
+        self.type = 2
+        self.damage = 9
+        self.efficiency = 50
+
+
+class CopperSword(Instrument):
+    def __init__(self):
+        super().__init__(15)
+
+        self.name = "Copper Sword"
+        self.color = ()
+        self.recipe = []
+        self.type = 0
+        self.damage = 25
+        self.efficiency = 0
+
+
+class CopperPickaxe(Instrument):
+    def __init__(self):
+        super().__init__(16)
+
+        self.name = "Copper Pickaxe"
+        self.color = ()
+        self.recipe = []
+        self.type = 1
+        self.damage = 7
+        self.efficiency = 70
+
+
+class CopperAxe(Instrument):
+    def __init__(self):
+        super().__init__(17)
+
+        self.name = "Copper Axe"
+        self.color = ()
+        self.recipe = []
+        self.type = 2
+        self.damage = 15
+        self.efficiency = 70
+
+
+class IronSword(Instrument):
+    def __init__(self):
+        super().__init__(18)
+
+        self.name = "Iron Sword"
+        self.color = ()
+        self.recipe = []
+        self.type = 0
+        self.damage = 30
+        self.efficiency = 0
+
+
+class IronPickaxe(Instrument):
+    def __init__(self):
+        super().__init__(19)
+
+        self.name = "Iron Pickaxe"
+        self.color = ()
+        self.recipe = []
+        self.type = 1
+        self.damage = 10
+        self.efficiency = 77
+
+
+class IronAxe(Instrument):
+    def __init__(self):
+        super().__init__(20)
+
+        self.name = "Iron Axe"
+        self.color = ()
+        self.recipe = []
+        self.type = 2
+        self.damage = 19
+        self.efficiency = 77

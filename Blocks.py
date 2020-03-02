@@ -1,39 +1,48 @@
 import pygame
+import Sprites
 from pygame import Rect
+
+blocks_sprites = pygame.sprite.Group()
 
 
 class Block:
-    size = 20
+    size = 32
 
-    # block_id блока и его координаты в блоках;
+    def __init__(self, id, x, y):
+        # id блока и его координаты в блоках;
 
-    def __init__(self, block_id, x, y):
-        self.block_id = block_id
+        self.id = id
         self.x = x
         self.y = y
 
-        # Имя блока;
-        # Цвет отрисовки;
-        # Возможность разрушения;
-        # Прочность блока при добыче: киркой, топором;
-        # block_id итема, выпадающего при разрушении;
+        # Имя блока
+        # Его цвет отрисовки
+        # Разрушаемость
+        # Проходимость
+        # Прочность блока добыче: киркой, топором
+        # id итема, выпадающего при разрушении
 
         self.name = str()
         self.color = tuple()
         self.is_breakable = bool()
+        self.is_passable = bool()
         self.solidity_pickaxe = int()
         self.solidity_axe = int()
         self.drop = int()
 
-    # Метод отрисоки;
-    # x, y - координаты блока на экране в пикселях
-    def show(self, screen, x, y):
+        # Спрайт блока
+        self.image = pygame.Surface((self.size, self.size))
+        self.sprite = Sprites.BlockSprite(self)
+
+    # Функция отрисоки;
+
+    def show(self, screen):
         if self.color == ():
             return
 
-        pygame.draw.rect(screen, self.color, Rect(x, y, self.size, self.size))
+        pygame.draw.rect(screen, self.color, Rect(self.x * self.size, self.y * self.size, self.size, self.size))
 
-    # Метод разрушения;
+    # Функция разрушения;
 
     def destroy(self, screen):
         pass
@@ -48,11 +57,12 @@ class Air(Block):
         self.name = "Air"
         self.color = (0, 0, 255)
         self.is_breakable = False
-
-        # -1 значит проходимость игроком и мобами
-
+        self.is_passable = True
         self.solidity_pickaxe = -1
         self.solidity_axe = -1
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Кореной Породы (JJBA: Diamond Is Unbreakable);
@@ -64,11 +74,12 @@ class JoJoStone(Block):
         self.name = "JoJoStone"
         self.color = (106, 13, 173)
         self.is_breakable = False
-
-        # 1000 значит, что его нельзя будет скопать ни одной киркой или топором
-
+        self.is_passable = False
         self.solidity_pickaxe = 1000
         self.solidity_axe = 1000
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Грязи;
@@ -80,9 +91,13 @@ class Dirt(Block):
         self.name = "Dirt"
         self.color = (77, 38, 0)
         self.is_breakable = True
+        self.is_passable = False
         self.solidity_pickaxe = 25
         self.solidity_axe = 25
         self.drop = 0
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Камня;
@@ -94,9 +109,13 @@ class Stone(Block):
         self.name = "Stone"
         self.color = (107, 107, 71)
         self.is_breakable = True
+        self.is_passable = False
         self.solidity_pickaxe = 35
         self.solidity_axe = 1000
         self.drop = 1
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Медной Руды
@@ -108,9 +127,13 @@ class CopperOre(Block):
         self.name = "Copper Ore"
         self.color = (72, 45, 20)
         self.is_breakable = True
+        self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 1000
         self.drop = 2
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Железной Руды
@@ -122,9 +145,13 @@ class IronOre(Block):
         self.name = "Iron Ore"
         self.color = (203, 205, 205)
         self.is_breakable = True
+        self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 1000
         self.drop = 3
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Дерева
@@ -136,9 +163,13 @@ class Wood(Block):
         self.name = "Wood"
         self.color = (133, 94, 66)
         self.is_breakable = True
+        self.is_passable = True
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
         self.drop = 4
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Листвы
@@ -150,8 +181,12 @@ class Foliage(Block):
         self.name = "Foliage"
         self.color = (80, 200, 120)
         self.is_breakable = True
+        self.is_passable = True
         self.solidity_pickaxe = 5
         self.solidity_axe = 5
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Древесины
@@ -163,9 +198,13 @@ class TimberBlock(Block):
         self.name = "Timber Block"
         self.color = (150, 75, 0)
         self.is_breakable = True
+        self.is_passable = False
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
         self.drop = 4
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Верстака
@@ -177,9 +216,13 @@ class WorkbenchBlock(Block):
         self.name = "Placed Workbench"
         self.color = (252, 211, 59)
         self.is_breakable = True
+        self.is_passable = True
         self.solidity_pickaxe = 50
         self.solidity_axe = 20
         self.drop = 5
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)
 
 
 # Блок Печи
@@ -191,6 +234,10 @@ class FurnaceBlock(Block):
         self.name = "Placed Furnace"
         self.color = (112, 128, 144)
         self.is_breakable = True
+        self.is_passable = True
         self.solidity_pickaxe = 30
         self.solidity_axe = 1000
         self.drop = 6
+
+        self.image.fill(self.color)
+        self.sprite.update_image(self.image)

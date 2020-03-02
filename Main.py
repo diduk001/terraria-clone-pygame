@@ -1,8 +1,9 @@
 import pygame
 import World
 import Blocks
-import Player
-
+import Mobs
+import Inventory
+import Items
 
 def main():
     pygame.init()
@@ -14,40 +15,59 @@ def main():
     # Создание мира и игрока в центре мира
 
     world = World.World(screen)
-    player = Player.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
+    player = Mobs.Player(world.width // 2 * Blocks.Block.size, (world.height // 2 - 2) * Blocks.Block.size)
+    inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+    inventory.content[0][0] = [Items.DugDirt(), 2]
+    inventory.content[3][2] = [Items.Timber(), 100]
+    inventory.content[0][9] = [Items.QuarriedStone(), 100]
+    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Настройка fps, цикла игры
 
-    fps = 60
+    fps = 120
     clock = pygame.time.Clock()
 
     running = True
     while running:
         # Обработка событий
-        if pygame.key.get_pressed()[32]:
-            player.jump()
+        if pygame.key.get_pressed()[100]:
+            player.move_right()
+        if pygame.key.get_pressed()[97]:
+            player.move_left()
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == 100:
-                    player.speed_x(player.speed)
-                if event.key == 97:
-                    player.speed_x(-player.speed)
-            if event.type == pygame.KEYUP:
-                if event.key == 100:
-                    player.speed_x(-player.speed)
-                if event.key == 97:
-                    player.speed_x(player.speed)
+            if event.type == pygame.KEYDOWN and (event.key == 32 or event.key == 119):
+                player.jump()
+
+            if event.type == pygame.KEYDOWN and event.key == 9:
+                inventory.is_open = not inventory.is_open
+                inventory.to_swap = []
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    inventory.left_clicked(event.pos)
+                if event.button == 3:
+                    inventory.right_clicked(event.pos)
+                if event.button == 4:
+                    if inventory.is_open:
+                        inventory.up_chosen_recipe()
+                    else:
+                        inventory.up_chosen_cell()
+                if event.button == 5:
+                    if inventory.is_open:
+                        inventory.down_chosen_recipe()
+                    else:
+                        inventory.down_chosen_cell()
+
             if event.type == pygame.QUIT:
                 running = False
 
         world.show()
-        player.show(screen)
-
+        inventory.show(screen)
         pygame.display.flip()
 
         # Обновление персонажа
         player.move()
-        player.fall(world.world)
+        player.update()
 
         clock.tick(fps)
 
