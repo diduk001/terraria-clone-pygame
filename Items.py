@@ -17,7 +17,8 @@ class Item:
         # Его цвет
         # Рецепт крафта (список туплов(id материала, кол-во) );
         # Размер стака;
-
+        self.is_placeable = False
+        self.is_instrument = False
         self.name = str()
         self.color = tuple()
         self.recipe = list(tuple())
@@ -52,7 +53,7 @@ class PlaceableItem(Item):
         super().__init__(id)
 
         # id блока, соответствующего текстуре;
-
+        self.is_placeable = True
         self.block = int()
 
     # функция размещения;
@@ -81,6 +82,7 @@ class Instrument(Item):
         # Инструменты не стакаются =(
         self.craft_count = 1
         self.max_stack = 1
+        self.is_instrument = True
 
         # Тип инструмента (меч, кирка, топор);
         # Наносимый урон (есть у всех инструментов);
@@ -291,7 +293,7 @@ class CopperPickaxe(Instrument):
         super().__init__(16)
 
         self.name = "Copper Pickaxe"
-        self.color = ()
+        self.color = (255, 0, 0)
         self.recipe = []
         self.type = 1
         self.damage = 7

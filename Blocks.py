@@ -37,7 +37,7 @@ class Block:
         self.image = pygame.Surface((self.size, self.size))
         self.sprite = Sprites.BlockSprite(self)
 
-    # Функция отрисоки;
+    # Функция отрисовки;
 
     def show(self, screen):
         if self.color == ():

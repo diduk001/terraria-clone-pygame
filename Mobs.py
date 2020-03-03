@@ -1,6 +1,8 @@
 import pygame
 
 import Sprites
+import Inventory
+import Items
 from Blocks import Block
 
 
@@ -81,9 +83,15 @@ class Player(Mobs):
         self.jump_speed = -8
         self.jump_time = 16
         self.attack = int()
-        self.speed = 2
+        self.speed = 1
+        self.inventory = Inventory.Inventory(1, 3, 10, 10, 10)
+        self.inventory.content[0][0] = [Items.DugDirt(), 2]
+        self.inventory.content[0][1] = [Items.CopperPickaxe(), 1]
+        self.inventory.content[3][2] = [Items.Timber(), 100]
+        self.inventory.content[0][9] = [Items.QuarriedStone(), 100]
+        self.inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
         self.image = pygame.Surface((self.width, self.height))
-        self.sprite = Sprites.MobSprite(self)
+        self.sprite = Sprites.PlayerSprites(self)
         self.efficiency_pickaxe = 1
         self.efficiency_axe = 1
         self.hand = None
@@ -118,3 +126,17 @@ class Player(Mobs):
             player_block_y = self.y // Block.size
             if self.range ** 2 >= (block.x - player_block_x) ** 2 - (block.y - player_block_y) ** 2:
                 pass
+
+    def update(self):
+        super().update()
+        self.update_hand()
+
+    def update_hand(self):
+        if self.inventory.chosen_cell is None:
+            self.hand = None
+        else:
+            x, y = self.inventory.chosen_cell
+            if self.inventory.content[x][y][0].name == "Void":
+                self.hand = None
+            else:
+                self.hand = self.inventory.content[x][y][0]

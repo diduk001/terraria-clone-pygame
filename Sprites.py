@@ -66,13 +66,13 @@ class ItemSprite(MySprite):
         self.image.fill(self.item.color)
 
     def move(self):
+        dirt = False
         for block_sprite in pygame.sprite.spritecollide(self, blocks_sprites, False):
             block = block_sprite.block
-            dirt = False
             if not block.is_passable:
                 dirt = True
                 self.vy = 0
-            elif not dirt and self.vy == 0:
+            elif not dirt:
                 self.vy = 2
         self.rect.y += self.vy
 
@@ -139,5 +139,12 @@ class MobSprite(MySprite):
 
 
 class PlayerSprites(MobSprite):
+    def __init__(self, player):
+        super().__init__(player)
+        self.player = player
     def move(self):
         super().move()
+        for item_sprite in pygame.sprite.spritecollide(self, item_sprites, False):
+            item = item_sprite.item
+            self.player.inventory.item_add(item, 1)
+            item_sprite.delete()

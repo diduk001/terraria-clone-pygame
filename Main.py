@@ -23,11 +23,6 @@ def main():
     # Создание мира и игрока в центре мира
 
     world = World.World(screen)
-    inventory = Inventory.Inventory(1, 3, 10, 10, 10)
-    inventory.content[0][0] = [Items.DugDirt(), 2]
-    inventory.content[3][2] = [Items.Timber(), 100]
-    inventory.content[0][9] = [Items.QuarriedStone(), 100]
-    inventory.content[1][9] = [Items.QuarriedCopperOre(), 100]
 
     # Выбор места для спавна игрока
 
@@ -63,29 +58,29 @@ def main():
                 player.jump()
 
             if event.type == pygame.KEYDOWN and event.key == 9:
-                inventory.is_open = not inventory.is_open
-                inventory.to_swap = []
+                player.inventory.is_open = not player.inventory.is_open
+                player.inventory.to_swap = []
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    inventory.left_clicked(event.pos)
+                    player.inventory.left_clicked(event.pos)
                 if event.button == 3:
-                    inventory.right_clicked(event.pos)
+                    player.inventory.right_clicked(event.pos)
                     x, y = block_coordinates(pygame.mouse.get_pos())
                     player.right_clicked(world.world[x][y])
                 if event.button == 4:
-                    if inventory.is_open:
-                        inventory.up_chosen_recipe()
+                    if player.inventory.is_open:
+                        player.inventory.up_chosen_recipe()
                     else:
-                        inventory.up_chosen_cell()
+                        player.inventory.up_chosen_cell()
                 if event.button == 5:
-                    if inventory.is_open:
-                        inventory.down_chosen_recipe()
+                    if player.inventory.is_open:
+                        player.inventory.down_chosen_recipe()
                     else:
-                        inventory.down_chosen_cell()
+                        player.inventory.down_chosen_cell()
 
             if event.type == pygame.QUIT:
-                running = False
+                running = True
 
         world.show()
         world.update()
@@ -94,7 +89,6 @@ def main():
         # Обновление персонажа
         player.move()
         player.update()
-
         clock.tick(fps)
 
 if __name__ == '__main__':
