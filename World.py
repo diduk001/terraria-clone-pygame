@@ -6,8 +6,8 @@ import Sprites
 class World:
     # Размер блока, Высота и Ширина мира (в блоках)
     size = Blocks.Block.size
-    width = 40
-    height = 18
+    width = 100
+    height = 30
 
     def __init__(self, screen):
         self.world = list()

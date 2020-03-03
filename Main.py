@@ -1,5 +1,6 @@
 import pygame
 import Blocks
+import Camera
 import Inventory
 import Items
 import Mobs
@@ -19,6 +20,7 @@ def main():
 
     height, width = 1000, 600
     screen = pygame.display.set_mode((height, width))
+    camera = Camera.Camera()
 
     # Создание мира и игрока в центре мира
 
@@ -82,6 +84,8 @@ def main():
             if event.type == pygame.QUIT:
                 running = True
 
+        camera.show()
+
         world.show()
         world.update()
         player.inventory.show(screen)
@@ -89,6 +93,8 @@ def main():
         # Обновление персонажа
         player.move()
         player.update()
+        # Обновление камеры
+        camera.update(player.sprite)
         clock.tick(fps)
 
 if __name__ == '__main__':
