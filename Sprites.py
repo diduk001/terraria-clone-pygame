@@ -94,7 +94,7 @@ class MobSprite(MySprite):
         up = [self.mob.x, self.mob.y + self.mob.jump_speed, self.mob.width, -self.mob.jump_speed]
         down = [self.mob.x, self.mob.y + self.mob.height, self.mob.width, -self.mob.jump_speed]
         left = [self.mob.x - self.mob.speed, self.mob.y, self.mob.speed, self.mob.height]
-        right = [self.mob.x + self.mob.width, self.mob.y, self.mob.speed, self.mob.height]
+        right = [self.mob.x + self.mob.width, self.mob.y, 1, self.mob.height]
         self.up = BorderSprites(border_sprites, *up)
         self.down = BorderSprites(border_sprites, *down)
         self.left = BorderSprites(border_sprites, *left)
@@ -140,12 +140,10 @@ class MobSprite(MySprite):
         self.update_coordinates()
 
     def update_coordinates(self):
-        self.mob.x = self.rect.x
-        self.mob.y = self.rect.y
-        self.up.update_coordinates(self.mob.x, self.mob.y - 1)
-        self.down.update_coordinates(self.mob.x, self.mob.y + self.mob.height)
-        self.left.update_coordinates(self.mob.x - self.mob.speed, self.mob.y)
-        self.right.update_coordinates(self.mob.x + self.mob.width, self.mob.y)
+        self.up.update_coordinates(self.rect.x, self.rect.y - 1)
+        self.down.update_coordinates(self.rect.x, self.rect.y + self.mob.height)
+        self.left.update_coordinates(self.rect.x - self.mob.speed, self.rect.y)
+        self.right.update_coordinates(self.rect.x + self.mob.width, self.rect.y)
 
 
 class PlayerSprites(MobSprite):
@@ -157,4 +155,4 @@ class PlayerSprites(MobSprite):
         for item_sprite in pygame.sprite.spritecollide(self, item_sprites, False):
             item = item_sprite.item
             self.player.inventory.item_add(item, 1)
-            item_sprite.delete()
+            item_sprite.deslete()

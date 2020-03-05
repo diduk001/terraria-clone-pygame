@@ -21,8 +21,6 @@ class Camera:
 
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - Main.width // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - Main.height // 2)
-
     # Метод отрисовки
 
     def show(self):

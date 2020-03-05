@@ -32,6 +32,8 @@ class Mobs:
 
     def move(self):
         self.sprite.move()
+        self.x += self.vx
+        self.y += self.vy
 
     def move_right(self):
         if self.right_free:
@@ -80,12 +82,12 @@ class Player(Mobs):
         self.hp = 100
         self.width = 1 * Block.size
         self.height = 2 * Block.size
-        self.jump_speed = -8
+        self.jump_speed = -16
         self.jump_time = 16
         self.attack = int()
-        self.speed = 1
+        self.speed = 16
         self.inventory = Inventory.Inventory(1, 3, 10, 10, 10)
-        self.inventory.content[0][0] = [Items.DugDirt(), 2]
+        self.inventory.content[0][8] = [Items.DugDirt(), 2]
         self.inventory.content[0][1] = [Items.CopperPickaxe(), 1]
         self.inventory.content[3][2] = [Items.Timber(), 100]
         self.inventory.content[0][9] = [Items.QuarriedStone(), 100]
